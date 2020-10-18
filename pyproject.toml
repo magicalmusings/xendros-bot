@@ -1,0 +1,22 @@
+[build-system]
+build-backend = "poetry.masonry.api"
+requires = ["poetry>=0.12"]
+
+[tool]
+[tool.poetry]
+authors = ["Your Name <you@example.com>"]
+description = ""
+name = "discord-bot-server"
+version = "0.1.0"
+[tool.poetry.dependencies]
+discord = "^1.0"
+disputils = "^0.1.3"
+flask = "^1.1"
+google-api-python-client = "^1.8"
+google-auth-oauthlib = "^0.4.1"
+google-nucleus = "^0.5.1"
+gspread = "^3.6"
+jsonmerge = "^1.7"
+oauth2client = "^4.1"
+python = "^3.8"
+[tool.poetry.dev-dependencies]
