@@ -28,7 +28,7 @@ class Events( commands.Cog ):
     # Changes bot presence on Discord
     await self.bot.change_presence( 
       activity=discord.Activity( 
-        type = discord.ActivityType.watching, name = "your Silver | !x help"
+        type = discord.ActivityType.watching, name = "your wallet | !x help"
       ) )
     # Console Output to show bot is working
     print( '------\nLogged in as' )
