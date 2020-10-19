@@ -156,7 +156,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE(S): If command is given improperly 
     if args is None or len( args ) < 2:
       
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.ARGS_LENGTH_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.ADD_ARGS_LENGTH_ERROR )
       return
 
     char_add_flag = False
