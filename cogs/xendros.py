@@ -7,9 +7,9 @@ from random import seed
 from random import randint
 import sqlite3
 
-global APPEND_TAG = "a"
-global CHAR_DATA_PATH = "data/char_data.sqlite"
-global CURRENCY_SWITCH = {
+APPEND_TAG = "a"
+CHAR_DATA_PATH = "data/char_data.sqlite"
+CURRENCY_SWITCH = {
       'ap': "action_points",
       'cp': "copper",
       'dt': "downtime",
@@ -19,13 +19,13 @@ global CURRENCY_SWITCH = {
       'pp': "platinum",
       'sp': 'silver'
     }
-global RARE_ITEMS = {}
-global RARE_ITEMS_PATH = "data/rare.json"
-global READ_TAG = "r"
-global UNCOMMON_ITEMS = {}
-global UNCOMMON_ITEMS_PATH = "data/uncommon.json"
-global USER_CHARS_DATA_PATH = "data/user_chars.sqlite"
-global WRITE_TAG = "w"
+RARE_ITEMS = {}
+RARE_ITEMS_PATH = "data/rare.json"
+READ_TAG = "r"
+UNCOMMON_ITEMS = {}
+UNCOMMON_ITEMS_PATH = "data/uncommon.json"
+USER_CHARS_DATA_PATH = "data/user_chars.sqlite"
+WRITE_TAG = "w"
 
 class XendrosCog( commands.Cog, name = "Xendros" ):
 
