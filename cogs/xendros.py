@@ -3,8 +3,8 @@ from discord.ext import commands
 import disputils
 import json
 from jsonmerge import merge
-import sqlite3
-
+from random import seed
+from random import randint
 import sqlite3
 
 APPEND_TAG = "a"
@@ -35,13 +35,18 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Import Magic Item Data
 
+    # Uncommon Items 
+
     with open( UNCOMMON_ITEMS_PATH, READ_TAG ) as read_file:
       UNCOMMON_ITEMS = json.load( read_file )
+
+    print( f"Loaded {len(UNCOMMON_ITEMS['uncommon'])} uncommon magic items!" )
+
+    # Rare Items
 
     with open( RARE_ITEMS_PATH, READ_TAG ) as read_file:
       RARE_ITEMS = json.load( read_file )
 
-    print( f"Loaded {len(UNCOMMON_ITEMS['uncommon'])} uncommon magic items!" )
     print( f"Loaded {len(RARE_ITEMS['rare'])} rare magic items!" )
 
     # Import / Create SQL Databases 
@@ -806,11 +811,47 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await ctx.send( "Invalid subcommand passed..." )
 
   # rollUncommon function
-  @gacharoll.command( name = "uncommon", pass_context = True, aliases = ["UC"])
+  @gacharoll.command( name = "uncommon", pass_context = True, aliases = ["UC", "uc"])
   async def rollUncommon( self, ctx, arg = None ):
 
     # TODO: Implement rollUncommon()
 
+    message = ctx.message
+    total_items = len( UNCOMMON_ITEMS['uncommon'] )
+
+    # Check current balance 
+
+    # ERROR CASE: Not enough money to roll
+
+    # Subtract money from balance 
+
+    # Get Random Number 
+    await ctx.send( f"Rolling for { total_items } potential items...")
+    roll = randint( 1, total_items)
+    await ctx.send( f"Pulled { roll }! Grabbing item from the archives...")
+
+    # Find item 
+    item = UNCOMMON_ITEMS['uncommon'][str(roll)]
+    item_name = item["name"]
+    item_attn = item["attn"]
+    item_desc = item["desc"]
+
+    
+    embed = discord.Embed(
+      title = item_name,
+      color = discord.Color.green()
+    )
+    embed.add_field( name = "Requires Attunement?",
+                     value = item_attn,
+                     inline = False )
+    embed.add_field( name = "Description",
+                     value = item_desc,
+                     inline = False )
+
+    # Display Item to user
+    await ctx.send( embed = embed )
+
+    # End of rollUncommon() function
     return 
 
   # rollRare function  
