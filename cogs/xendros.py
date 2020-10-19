@@ -120,20 +120,20 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   async def displayErrorMessage( self, ctx, error_code = ERROR_CODES.NO_ERROR ):
 
     error_messages = {
-      NO_ERROR: "No Error",
-      ADD_ARGS_LENGTH_ERROR:"I need a name and url for tracking inventory, darling. Try running the command again like this: ```!x add <char_name> <gsheet url> ```",
-      USER_ID_NOT_FOUND_ERROR: "I don't seem to have any characters registered with your user ID. Please attempt to add a character using ```!x add <char_name> <gsheet_url>```",
-      CHAR_ID_NOT_FOUND_ERROR:"There seems to be a mistake here. I do not have your character on file. Please attempt to add a character using ```!x add <char_name> <gsheet_url>",
-      TOO_MANY_CHARS_ERROR: "Darling, you already have three characters registered with me. How many more do you need? Consider deleting one using ```!x delete <char_number>```",
-      DELETE_ARGS_LENGTH_ERROR: "Alas darling, you must tell me which character you'd like to delete to. Try using the command like this: ```!x delete <char_slot>```",
-      CHAR_SLOT_EMPTY_ERROR: "Unfortunately, I cannot delete that which does not exist. That character slot is currently empty in my books.",
-      ERASE_NO_CHAR_ERROR: "Unfortunately, I cannot erase that which does not exist. That user is not currently registered in my books.",
-      SWITCHCHAR_ARGS_LENGTH_ERROR: "Alas darling, you must tell me which character you'd like to switch to. Try using the command like this: ```!x switchchar <char_slot>```",
-      SWITCHCHAR_ACTIVE_SET_ERROR: f"I have already set your active character to this character slot. No need to tell me twice!",
-      SWITCHCHAR_CHAR_SLOT_ONE_ERROR: "You do not have a character registered with Slot 1. Consider adding another using ```!x add <char_name> <gsheet url>```",
-      SWITCHCHAR_CHAR_SLOT_TWO_ERROR: "You do not have a character registered with Slot 2. Consider adding another using ```!x add <char_name> <gsheet url>```",
-      SWITCHCHAR_CHAR_SLOT_THREE_ERROR: "You do not have a character registered with Slot 3. Consider adding another using ```!x add <char_name> <gsheet url>```",
-      SWITCHCHAR_ONE_CHAR_ERROR: "You only have one character registered with me, love. Consider adding another using ```!x add <char_name> <gsheet url>```",
+      ERROR_CODES.NO_ERROR: "No Error",
+      ERROR_CODES.ADD_ARGS_LENGTH_ERROR:"I need a name and url for tracking inventory, darling. Try running the command again like this: ```!x add <char_name> <gsheet url> ```",
+      ERROR_CODES.USER_ID_NOT_FOUND_ERROR: "I don't seem to have any characters registered with your user ID. Please attempt to add a character using ```!x add <char_name> <gsheet_url>```",
+      ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR:"There seems to be a mistake here. I do not have your character on file. Please attempt to add a character using ```!x add <char_name> <gsheet_url>",
+      ERROR_CODES.TOO_MANY_CHARS_ERROR: "Darling, you already have three characters registered with me. How many more do you need? Consider deleting one using ```!x delete <char_number>```",
+      ERROR_CODES.DELETE_ARGS_LENGTH_ERROR: "Alas darling, you must tell me which character you'd like to delete to. Try using the command like this: ```!x delete <char_slot>```",
+      ERROR_CODES.CHAR_SLOT_EMPTY_ERROR: "Unfortunately, I cannot delete that which does not exist. That character slot is currently empty in my books.",
+      ERROR_CODES.ERASE_NO_CHAR_ERROR: "Unfortunately, I cannot erase that which does not exist. That user is not currently registered in my books.",
+      ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR: "Alas darling, you must tell me which character you'd like to switch to. Try using the command like this: ```!x switchchar <char_slot>```",
+      ERROR_CODES.SWITCHCHAR_ACTIVE_SET_ERROR: f"I have already set your active character to this character slot. No need to tell me twice!",
+      ERROR_CODES.SWITCHCHAR_CHAR_SLOT_ONE_ERROR: "You do not have a character registered with Slot 1. Consider adding another using ```!x add <char_name> <gsheet url>```",
+      ERROR_CODES.SWITCHCHAR_CHAR_SLOT_TWO_ERROR: "You do not have a character registered with Slot 2. Consider adding another using ```!x add <char_name> <gsheet url>```",
+      ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR: "You do not have a character registered with Slot 3. Consider adding another using ```!x add <char_name> <gsheet url>```",
+      ERROR_CODES.SWITCHCHAR_ONE_CHAR_ERROR: "You only have one character registered with me, love. Consider adding another using ```!x add <char_name> <gsheet url>```",
 
     }
 
@@ -143,7 +143,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       
       print( "ERROR CODE NOT FOUND, RETURNING EMPTY STRING")
       error_msg_str = ""
-      return
 
     await ctx.send( error_msg_str )
 
@@ -157,7 +156,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE(S): If command is given improperly 
     if args is None or len( args ) < 2:
       
-      await displayErrorMessage( self, ctx, ARGS_LENGTH_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.ARGS_LENGTH_ERROR )
       return
 
     char_add_flag = False
@@ -198,7 +197,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If three characters are already made 
     if char_one_id !=0 and char_two_id != 0 and char_three_id != 0:
-      await displayErrorMessage( self, ctx, TOO_MANY_CHARS_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.TOO_MANY_CHARS_ERROR )
       cursor.close()
       db.close()
       return
@@ -286,7 +285,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: if result is non-existent (no characters registered)
     if result is None:
-      await displayErrorMessage( self, ctx, DELETE_ARGS_LENGTH_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.DELETE_ARGS_LENGTH_ERROR )
       cursor.close()
       db.close()
       return
@@ -297,14 +296,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If the specified slot is already empty
     char_one_id = int( result[0] )
     if char_one_id == 0 and char_slot == 1:
-      await displayErrorMessage( self, ctx, CHAR_SLOT_EMPTY_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
       cursor.close()
       db.close()
       return
 
     char_two_id = int( result[1] )
     if char_two_id == 0 and char_slot == 2:
-      await displayErrorMessage( self, ctx, CHAR_SLOT_EMPTY_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
       cursor.close()
       db.close()
       return
@@ -312,7 +311,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     char_three_id = int( result[2] )
     
     if char_three_id == 0 and char_slot == 3:
-      await displayErrorMessage( self, ctx, CHAR_SLOT_EMPTY_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
       cursor.close()
       db.close()
       return
@@ -365,7 +364,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     if result is None:
 
-      await displayErrorMessage( self, ctx, ERASE_NO_CHAR_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.ERASE_NO_CHAR_ERROR )
       cursor.close()
       db.close()
       return
@@ -390,7 +389,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: if command is not called correctly
 
     if arg is None: 
-      await displayErrorMessage( self, ctx, SWITCHCHAR_ARGS_LENGTH_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
       return
 
     message = ctx.message
@@ -405,7 +404,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If there is no data for the user
     if result is None:
-      await displayErrorMessage( self, ctx, USER_ID_NOT_FOUND_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -414,7 +413,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If the active character is already set 
     if active_char == arg:
-      await displayErrorMessage( self, ctx, SWITCHCHAR_ACTIVE_SET_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_ACTIVE_SET_ERROR )
       cursor.close()
       db.close()
       return
@@ -431,7 +430,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If only one character is registered
     if char_two_id == 0 and char_three_id == 0:
 
-      await displayErrorMessage( self, ctx, SWITCHCHAR_ONE_CHAR_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_ONE_CHAR_ERROR )
       cursor.close()
       db.close()
       return
@@ -439,21 +438,21 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If slot chosen is not filled 
     if char_one_id == 0 and arg == 1:
 
-      await displayErrorMessage( self, ctx, SWITCHCHAR_CHAR_SLOT_ONE_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_ONE_ERROR )
       cursor.close()
       db.close()
       return
 
     elif char_two_id == 0 and arg == 2:
 
-      await displayErrorMessage( self, ctx, SWITCHCHAR_CHAR_SLOT_TWO_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_TWO_ERROR )
       cursor.close()
       db.close()
       return
 
     elif char_three_id == 0 and arg == 3:
 
-      await displayErrorMessage( self, ctx, SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
       cursor.close()
       db.close()
       return
@@ -512,7 +511,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If Result is None
     if result is None: 
 
-      await displayErrorMessage( self, ctx, USER_ID_NOT_FOUND_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -539,7 +538,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: Character is not found in database
     if result is None:
-      await displayErrorMessage( self, ctx, CHAR_ID_NOT_FOUND_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -567,7 +566,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If result is none
     if result is None: 
 
-      await displayErrorMessage( self, ctx, USER_ID_NOT_FOUND_ERROR )
+      await self.displayErrorMessage( self, ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return 
