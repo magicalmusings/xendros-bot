@@ -911,6 +911,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Convert currency_one to currency_two
     if curr_one_conversion == curr_two_conversion:
 
+      return
+
     elif curr_one_conversion < curr_two_conversion:
 
       new_curr_one_amt = curr_one_amt % curr_one_conversion
