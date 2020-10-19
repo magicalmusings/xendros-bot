@@ -187,7 +187,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     db = sqlite3.connect( USER_CHARS_DATA_PATH )
     cursor = db.cursor()
     cursor.execute( 
-      f"SELECT user_id, active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ user_id }'")
+      f"SELECT user_id, active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'")
 
     result = cursor.fetchone()
 
