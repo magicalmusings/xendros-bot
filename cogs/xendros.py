@@ -817,13 +817,15 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # TODO: Implement rollUncommon()
 
     message = ctx.message
-    total_items = len( UNCOMMON_ITEMS['uncommon'] )
+    total_items = len(UNCOMMON_ITEMS['uncommon'])
 
     # Check current balance 
 
     # ERROR CASE: Not enough money to roll
 
     # Subtract money from balance 
+
+    # Update gacha_rolls variable
 
     # Get Random Number 
     await ctx.send( f"Rolling for { total_items } potential items...")
