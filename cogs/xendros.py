@@ -41,9 +41,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     with open( RARE_ITEMS_PATH, READ_TAG ) as read_file:
       RARE_ITEMS = json.load( read_file )
 
-    print( UNCOMMON_ITEMS['uncommon'].keys() )
-    print( RARE_ITEMS['rare'].keys() )
-
     # Import / Create SQL Databases 
 
     # User Characters Database 
