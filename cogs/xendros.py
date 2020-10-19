@@ -3,7 +3,6 @@ from discord.ext import commands
 import disputils
 import json
 from jsonmerge import merge
-from random import seed
 from random import randint
 import sqlite3
 
@@ -18,13 +17,21 @@ CURRENCY_SWITCH = {
       'lt': "lore_tokens",
       'pp': "platinum",
       'sp': 'silver'
-    }
+}
+L_ROLL_COST = 50000
+LEGENDARY_ITEMS = {}
+LEGENDARY_ITEMS_PATH = "data/legendary.json"
+R_ROLL_COST = 2500
 RARE_ITEMS = {}
 RARE_ITEMS_PATH = "data/rare.json"
 READ_TAG = "r"
+UC_ROLL_COST = 250
 UNCOMMON_ITEMS = {}
 UNCOMMON_ITEMS_PATH = "data/uncommon.json"
 USER_CHARS_DATA_PATH = "data/user_chars.sqlite"
+VR_ROLL_COST = 25000
+VERYRARE_ITEMS = {}
+VERYRARE_ITEMS_PATH = "data/veryrare.json"
 WRITE_TAG = "w"
 
 class XendrosCog( commands.Cog, name = "Xendros" ):
@@ -803,9 +810,123 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     return 
 
+  # currex function
+  @commands.command( name = "currex", pass_context = True, aliases = ["cx"] )
+  async def currex( self, ctx, *args ):
+
+    # EX USAGE: !x currex <currency_one> <currency_two>
+
+    # ERROR CASE: if # of args is incorrect
+    if len( args ) < 2:
+
+      return 
+
+    message = ctx.message
+
+    # Get user char data 
+    db = sqlite3.connect( USER_CHARS_DATA_PATH )
+    cursor = db.cursor()
+    cursor.execute( f"""SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'""")
+    result = cursor.fetchone()
+
+    # ERROR CASE: If user is not registered
+    if result is None:
+
+      cursor.close()
+      db.close()
+      return
+
+    active_char = int( result[0] )
+    char_one_id = int( result[1] )
+    char_two_id = int( result[2] )
+    char_three_id = int( result[3] )
+
+    if active_char == 1:
+      char_id = char_one_id
+    elif active_char == 2:
+      char_id = char_two_id
+    elif active_char == 3:
+      char_id = char_three_id
+
+    currency_one = CURRENCY_SWITCH.get( args[0], "NULL")
+    currency_two = CURRENCY_SWITCH.get( args[1], "NULL")
+
+    # ERROR CASE: If input currency is invalid
+    if currency_one == "NULL" or currency_two == "NULL":
+
+      await ctx.send("That is not a currency that I can currently track. Consider retyping the command with a valid currency")
+      cursor.close()
+      db.close()
+      return
+    # ERROR CASE: If downtime is attempted for conversion
+    elif currency_one == "downtime" or currency_two == "downtime"
+      await ctx.send("I cannot convert downtime into money, unfortunately. Consider retyping the command with a valid currency")
+      cursor.close()
+      db.close()
+      return
+    # ERROR CASE: If ap / lt and pp/ep/gp/sp/cp are being converted between.
+    elif (currency_one == "action_points" or currency_one == "lore_tokens") and (currency_two == "platinum" or currency_two == "gold" or currency_two == "silver" or currency_two == "copper" or currency_two == "electrum"):
+      await ctx.send("I cannot convert AP / LT into money, or vice versa. Consider retyping the command with a valid currency")
+      cursor.close()
+      db.close()
+      return
+    elif (currency_two == "action_points" or currency_two == "lore_tokens") and (currency_one == "platinum" or currency_one == "gold" or currency_one == "silver" or currency_one == "copper" or currency_one == "electrum"):
+      await ctx.send("I cannot convert AP / LT into money, or vice versa. Consider retyping the command with a valid currency")
+      cursor.close()
+      db.close()
+      return
+
+    # Check current balance
+    db = sqlite3.connect( CHAR_DATA_PATH )
+    cursor = db.cursor()
+    cursor.execute( f"SELECT {currency_one}, {currency_two} FROM char_data WHERE char_id = '{char_id}'")
+    result = cursor.fetchone()
+
+    # ERROR CASE: If character does not exist
+    if result is None:
+
+      cursor.close()
+      db.close()
+      return
+
+    # Check amt of first currency
+    curr_one_amt = int( result[0] )
+    curr_two_amt = int( result[0] )
+
+    conversion_chart = {
+      "action_points": 5,
+      "lore_tokens": 0.2,
+      "platinum": 0.1,
+      "electrum": 0.5,
+      "gold": 1,
+      "silver": 10,
+      "copper": 100
+    }
+
+    curr_one_conversion = conversion_chart.get( currency_one, "NULL" )
+    curr_two_conversion = conversion_chart.get( currency_two, "NULL" )
+
+    # ERROR CASE: If amt cannot be converted
+
+    # Convert currency_one to currency_two
+    if curr_one_conversion == curr_two_conversion:
+
+    elif curr_one_conversion < curr_two_conversion:
+
+      new_curr_one_amt = curr_one_amt % curr_one_conversion
+      new_curr_two_amt = curr_one_amt * curr_one_conversion
+
+    elif curr_one_conversion > curr_two_conversion:
+
+      new_curr_two_amt = floor(curr_one_amt / curr_one_conversion)
+      new_curr_one_amt = curr_one_amt % curr_one_conversion
+
+    # Update character data 
+
+  
   ## Gacharoll Functions
 
-  @commands.group( name = "gacharoll", pass_context = True )
+  @commands.group( name = "gacharoll", pass_context = True, aliases = ["gr"] )
   async def gacharoll( self, ctx ):
 
     if ctx.invoked_subcommand is None:
@@ -816,18 +937,59 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @gacharoll.command( name = "uncommon", pass_context = True, aliases = ["UC", "uc"])
   async def rollUncommon( self, ctx, arg = None ):
 
-    # TODO: Implement rollUncommon()
-
     message = ctx.message
     total_items = len(UNCOMMON_ITEMS['uncommon'])
 
-    # Check current balance 
+    # Get Character Data 
+
+    # Check if user is registered 
+    db = sqlite3.connect( USER_CHARS_DATA_PATH )
+    cursor = db.cursor()
+    cursor.execute( f"""SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'""")
+    result = cursor.fetchone()
+
+    # ERROR CASE: If result is none (i.e. user is not registered)
+    if result is None:
+      
+      cursor.close()
+      db.close()
+      return 
+
+    active_char = int( result[0] )
+    char_one_id = int( result[1] )
+    char_two_id = int( result[2] )
+    char_three_id = int( result[3] )
+
+    if active_char == 1:
+      char_id = char_one_id
+    elif active_char == 2:
+      char_id = char_two_id
+    elif active_char == 3:
+      char_id = char_three_id
+
+    # Check current balance
+    db = sqlite3.connect( CHAR_DATA_PATH )
+    cursor = db.cursor()
+    cursor.execute( f"SELECT gold, gacha_rolls FROM char_data WHERE char_id = '{char_id}'")
+    result = cursor.fetchone()
+
+    gold = int( result[0] )
+    gacha_rolls = int( result[1] )
 
     # ERROR CASE: Not enough money to roll
+    if gold < UC_ROLL_COST:
 
-    # Subtract money from balance 
+      cursor.close()
+      db.close()
+      return
 
+    # Subtract money from balance
     # Update gacha_rolls variable
+
+    sql = ( """UPDATE char_data SET gold = ?, gacha_rolls = ? WHERE char_id = ? """)
+    values = ( gold - UC_ROLL_COST, gacha_rolls + 1, char_id )
+    cursor.execute( sql, values )
+    db.commit()
 
     # Get Random Number 
     await ctx.send( f"Rolling for { total_items } potential items...")
@@ -836,11 +998,13 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Find item 
     item = UNCOMMON_ITEMS['uncommon'][str(roll)]
+
+    # Get item data
     item_name = item["name"]
     item_attn = item["attn"]
     item_desc = item["desc"]
 
-    
+    # Prep Item Embed for sending to user
     embed = discord.Embed(
       title = item_name,
       color = discord.Color.green()
@@ -855,15 +1019,125 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Display Item to user
     await ctx.send( embed = embed )
 
+    cursor.close()
+    db.close()
+
     # End of rollUncommon() function
     return 
 
-  # rollRare function  
+  # rollRare function
+  @gacharoll.command( name = "rare", pass_context = True, aliases = ["R", "r"])
+  async def rollRare( self, ctx , arg = None ): 
+
+    message = ctx.message
+    total_items = len(RARE_ITEMS['rare'])
+
+    # Get Character Data 
+
+    # Check if user is registered 
+    db = sqlite3.connect( USER_CHARS_DATA_PATH )
+    cursor = db.cursor()
+    cursor.execute( f"""SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'""")
+    result = cursor.fetchone()
+
+    # ERROR CASE: If result is none (i.e. user is not registered)
+    if result is None:
+      
+      cursor.close()
+      db.close()
+      return 
+
+    active_char = int( result[0] )
+    char_one_id = int( result[1] )
+    char_two_id = int( result[2] )
+    char_three_id = int( result[3] )
+
+    if active_char == 1:
+      char_id = char_one_id
+    elif active_char == 2:
+      char_id = char_two_id
+    elif active_char == 3:
+      char_id = char_three_id
+
+    # Check current balance
+    db = sqlite3.connect( CHAR_DATA_PATH )
+    cursor = db.cursor()
+    cursor.execute( f"SELECT gold, gacha_rolls FROM char_data WHERE char_id = '{char_id}'")
+    result = cursor.fetchone()
+
+    gold = int( result[0] )
+    gacha_rolls = int( result[1] )
+
+    # ERROR CASE: Not enough money to roll
+    if gold < R_ROLL_COST:
+
+      cursor.close()
+      db.close()
+      return
+
+    # Subtract money from balance
+    # Update gacha_rolls variable
+
+    sql = ( """UPDATE char_data SET gold = ?, gacha_rolls = ? WHERE char_id = ? """)
+    values = ( gold - R_ROLL_COST, gacha_rolls + 1, char_id )
+    cursor.execute( sql, values )
+    db.commit()
+
+    # Get Random Number 
+    await ctx.send( f"Rolling for { total_items } potential items...")
+    roll = randint( 1, total_items)
+    await ctx.send( f"Pulled { roll }! Grabbing item from the archives...")
+
+    # Find item 
+    item = RARE_ITEMS['rare'][str(roll)]
+
+    # Get item data
+    item_name = item["name"]
+    item_attn = item["attn"]
+    item_desc = item["desc"]
+
+    # Prep Item Embed for sending to user
+    embed = discord.Embed(
+      title = item_name,
+      color = discord.Color.blue()
+    )
+    embed.add_field( name = "Requires Attunement?",
+                     value = item_attn,
+                     inline = False )
+    embed.add_field( name = "Description",
+                     value = item_desc,
+                     inline = False )
+
+    # Display Item to user
+    await ctx.send( embed = embed )
+
+    cursor.close()
+    db.close()
+
+    # End of rollUncommon() function
+    return 
 
   # rollVeryRare function  
 
   # rollLegendary function
   
+  # GachaAdmin Command Group
+  @commands.group( name = "gachaadmin", pass_context = True , aliases = ["ga"])
+  @commands.is_owner()
+  async def gachaadmin( self, ctx ):
+
+    if ctx.invoked_subcommand is None:
+
+      await ctx.send( "Invalid subcommand passed..." )
+
+  # rollUncommon_admin
+
+  # rollRare_admin
+
+  # rollVeryRare_admin
+  
+  # rollLegendary_admin
+
 
 # End Xendros Cog
 
