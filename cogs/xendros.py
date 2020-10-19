@@ -7,9 +7,9 @@ from random import seed
 from random import randint
 import sqlite3
 
-APPEND_TAG = "a"
-CHAR_DATA_PATH = "data/char_data.sqlite"
-CURRENCY_SWITCH = {
+global APPEND_TAG = "a"
+global CHAR_DATA_PATH = "data/char_data.sqlite"
+global CURRENCY_SWITCH = {
       'ap': "action_points",
       'cp': "copper",
       'dt': "downtime",
@@ -19,13 +19,13 @@ CURRENCY_SWITCH = {
       'pp': "platinum",
       'sp': 'silver'
     }
-RARE_ITEMS = {}
-RARE_ITEMS_PATH = "data/rare.json"
-READ_TAG = "r"
-UNCOMMON_ITEMS = {}
-UNCOMMON_ITEMS_PATH = "data/uncommon.json"
-USER_CHARS_DATA_PATH = "data/user_chars.sqlite"
-WRITE_TAG = "w"
+global RARE_ITEMS = {}
+global RARE_ITEMS_PATH = "data/rare.json"
+global READ_TAG = "r"
+global UNCOMMON_ITEMS = {}
+global UNCOMMON_ITEMS_PATH = "data/uncommon.json"
+global USER_CHARS_DATA_PATH = "data/user_chars.sqlite"
+global WRITE_TAG = "w"
 
 class XendrosCog( commands.Cog, name = "Xendros" ):
 
@@ -38,6 +38,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Uncommon Items 
 
     with open( UNCOMMON_ITEMS_PATH, READ_TAG ) as read_file:
+      global UNCOMMON_ITEMS
       UNCOMMON_ITEMS = json.load( read_file )
 
     print( f"Loaded {len(UNCOMMON_ITEMS['uncommon'])} uncommon magic items!" )
@@ -45,6 +46,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Rare Items
 
     with open( RARE_ITEMS_PATH, READ_TAG ) as read_file:
+      global RARE_ITEMS
       RARE_ITEMS = json.load( read_file )
 
     print( f"Loaded {len(RARE_ITEMS['rare'])} rare magic items!" )
