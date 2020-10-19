@@ -1259,9 +1259,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Display Item to user
     await ctx.send( embed = embed )
 
-    cursor.close()
-    db.close()
-
     # End of rollUncommon() function
     return 
 
@@ -1300,9 +1297,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Display Item to user
     await ctx.send( embed = embed )
-
-    cursor.close()
-    db.close()
 
     # End of rollUncommon() function
     return 
