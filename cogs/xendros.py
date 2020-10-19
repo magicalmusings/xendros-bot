@@ -859,7 +859,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       db.close()
       return
     # ERROR CASE: If downtime is attempted for conversion
-    elif currency_one == "downtime" or currency_two == "downtime"
+    elif currency_one == "downtime" or currency_two == "downtime":
       await ctx.send("I cannot convert downtime into money, unfortunately. Consider retyping the command with a valid currency")
       cursor.close()
       db.close()
