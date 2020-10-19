@@ -117,7 +117,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
   ## Main Functions 
 
-  async def displayErrorMessage( self, ctx, error_code = ERROR_CODES.NO_ERROR ):
+  async def displayErrorMessage( self, ctx, error_code ):
 
     error_messages = {
       ERROR_CODES.NO_ERROR: "No Error",
