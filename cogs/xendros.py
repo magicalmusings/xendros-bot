@@ -156,7 +156,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE(S): If command is given improperly 
     if args is None or len( args ) < 2:
       
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.ADD_ARGS_LENGTH_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.ADD_ARGS_LENGTH_ERROR )
       return
 
     char_add_flag = False
@@ -197,7 +197,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If three characters are already made 
     if char_one_id !=0 and char_two_id != 0 and char_three_id != 0:
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.TOO_MANY_CHARS_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.TOO_MANY_CHARS_ERROR )
       cursor.close()
       db.close()
       return
@@ -285,7 +285,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: if result is non-existent (no characters registered)
     if result is None:
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.DELETE_ARGS_LENGTH_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.DELETE_ARGS_LENGTH_ERROR )
       cursor.close()
       db.close()
       return
@@ -296,14 +296,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If the specified slot is already empty
     char_one_id = int( result[0] )
     if char_one_id == 0 and char_slot == 1:
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
       cursor.close()
       db.close()
       return
 
     char_two_id = int( result[1] )
     if char_two_id == 0 and char_slot == 2:
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
       cursor.close()
       db.close()
       return
@@ -311,7 +311,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     char_three_id = int( result[2] )
     
     if char_three_id == 0 and char_slot == 3:
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
       cursor.close()
       db.close()
       return
@@ -364,7 +364,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     if result is None:
 
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.ERASE_NO_CHAR_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.ERASE_NO_CHAR_ERROR )
       cursor.close()
       db.close()
       return
@@ -389,7 +389,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: if command is not called correctly
 
     if arg is None: 
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
       return
 
     message = ctx.message
@@ -404,7 +404,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If there is no data for the user
     if result is None:
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -413,7 +413,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If the active character is already set 
     if active_char == arg:
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_ACTIVE_SET_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ACTIVE_SET_ERROR )
       cursor.close()
       db.close()
       return
@@ -430,7 +430,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If only one character is registered
     if char_two_id == 0 and char_three_id == 0:
 
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_ONE_CHAR_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ONE_CHAR_ERROR )
       cursor.close()
       db.close()
       return
@@ -438,21 +438,21 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If slot chosen is not filled 
     if char_one_id == 0 and arg == 1:
 
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_ONE_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_ONE_ERROR )
       cursor.close()
       db.close()
       return
 
     elif char_two_id == 0 and arg == 2:
 
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_TWO_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_TWO_ERROR )
       cursor.close()
       db.close()
       return
 
     elif char_three_id == 0 and arg == 3:
 
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
       cursor.close()
       db.close()
       return
@@ -511,7 +511,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If Result is None
     if result is None: 
 
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -538,7 +538,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: Character is not found in database
     if result is None:
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -566,7 +566,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If result is none
     if result is None: 
 
-      await self.displayErrorMessage( self, ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return 
