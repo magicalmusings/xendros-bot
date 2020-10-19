@@ -119,20 +119,20 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   async def displayErrorMessage( self, ctx, error_code = ERROR_CODES.NO_ERROR ):
 
     error_messages = {
-      NO_ERROR = "No Error",
-      ADD_ARGS_LENGTH_ERROR = "I need a name and url for tracking inventory, darling. Try running the command again like this: ```!x add <char_name> <gsheet url> ```",
-      USER_ID_NOT_FOUND_ERROR = "I don't seem to have any characters registered with your user ID. Please attempt to add a character using ```!x add <char_name> <gsheet_url>```",
-      CHAR_ID_NOT_FOUND_ERROR = "There seems to be a mistake here. I do not have your character on file. Please attempt to add a character using ```!x add <char_name> <gsheet_url>",
-      TOO_MANY_CHARS_ERROR = "Darling, you already have three characters registered with me. How many more do you need? Consider deleting one using ```!x delete <char_number>```",
-      DELETE_ARGS_LENGTH_ERROR = "Alas darling, you must tell me which character you'd like to delete to. Try using the command like this: ```!x delete <char_slot>```",
-      CHAR_SLOT_EMPTY_ERROR = "Unfortunately, I cannot delete that which does not exist. That character slot is currently empty in my books.",
-      ERASE_NO_CHAR_ERROR = "Unfortunately, I cannot erase that which does not exist. That user is not currently registered in my books.",
-      SWITCHCHAR_ARGS_LENGTH_ERROR = "Alas darling, you must tell me which character you'd like to switch to. Try using the command like this: ```!x switchchar <char_slot>```",
-      SWITCHCHAR_ACTIVE_SET_ERROR = f"I have already set your active character to this character slot. No need to tell me twice!",
-      SWITCHCHAR_CHAR_SLOT_ONE_ERROR = "You do not have a character registered with Slot 1. Consider adding another using ```!x add <char_name> <gsheet url>```",
-      SWITCHCHAR_CHAR_SLOT_TWO_ERROR = "You do not have a character registered with Slot 2. Consider adding another using ```!x add <char_name> <gsheet url>```",
-      SWITCHCHAR_CHAR_SLOT_THREE_ERROR = "You do not have a character registered with Slot 3. Consider adding another using ```!x add <char_name> <gsheet url>```",
-      SWITCHCHAR_ONE_CHAR_ERROR = "You only have one character registered with me, love. Consider adding another using ```!x add <char_name> <gsheet url>```",
+      NO_ERROR: "No Error",
+      ADD_ARGS_LENGTH_ERROR:"I need a name and url for tracking inventory, darling. Try running the command again like this: ```!x add <char_name> <gsheet url> ```",
+      USER_ID_NOT_FOUND_ERROR: "I don't seem to have any characters registered with your user ID. Please attempt to add a character using ```!x add <char_name> <gsheet_url>```",
+      CHAR_ID_NOT_FOUND_ERROR:"There seems to be a mistake here. I do not have your character on file. Please attempt to add a character using ```!x add <char_name> <gsheet_url>",
+      TOO_MANY_CHARS_ERROR: "Darling, you already have three characters registered with me. How many more do you need? Consider deleting one using ```!x delete <char_number>```",
+      DELETE_ARGS_LENGTH_ERROR: "Alas darling, you must tell me which character you'd like to delete to. Try using the command like this: ```!x delete <char_slot>```",
+      CHAR_SLOT_EMPTY_ERROR: "Unfortunately, I cannot delete that which does not exist. That character slot is currently empty in my books.",
+      ERASE_NO_CHAR_ERROR: "Unfortunately, I cannot erase that which does not exist. That user is not currently registered in my books.",
+      SWITCHCHAR_ARGS_LENGTH_ERROR: "Alas darling, you must tell me which character you'd like to switch to. Try using the command like this: ```!x switchchar <char_slot>```",
+      SWITCHCHAR_ACTIVE_SET_ERROR: f"I have already set your active character to this character slot. No need to tell me twice!",
+      SWITCHCHAR_CHAR_SLOT_ONE_ERROR: "You do not have a character registered with Slot 1. Consider adding another using ```!x add <char_name> <gsheet url>```",
+      SWITCHCHAR_CHAR_SLOT_TWO_ERROR: "You do not have a character registered with Slot 2. Consider adding another using ```!x add <char_name> <gsheet url>```",
+      SWITCHCHAR_CHAR_SLOT_THREE_ERROR: "You do not have a character registered with Slot 3. Consider adding another using ```!x add <char_name> <gsheet url>```",
+      SWITCHCHAR_ONE_CHAR_ERROR: "You only have one character registered with me, love. Consider adding another using ```!x add <char_name> <gsheet url>```",
 
     }
 
