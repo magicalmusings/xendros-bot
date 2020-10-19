@@ -1071,7 +1071,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: Not enough money to roll
     if gold < UC_ROLL_COST:
-      await self.displayErrorMessage( ctx, ERROR_CODES.CACHAROLL_NOT_ENOUGH_MONEY_ERROR )
+      await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
       cursor.close()
       db.close()
       return
