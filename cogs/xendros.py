@@ -1223,9 +1223,89 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await self.displayErrorMessage( ctx, ERROR_CODES.GACHAADMIN_SUBCOMMAND_ERROR)
       return
 
-  # rollUncommon_admin
+  # rollUncommon_admin function
+  @gachaadmin.command( name = "uca", pass_context = True )
+  @commands.is_owner()
+  async def rollUncommonAdmin( self, ctx, arg = None ):
 
-  # rollRare_admin
+    message = ctx.message
+    total_items = len(UNCOMMON_ITEMS['uncommon'])
+
+    # Get Random Number 
+    await ctx.send( f"Rolling for { total_items } potential items...")
+    roll = randint( 1, total_items)
+    await ctx.send( f"Pulled { roll }! Grabbing item from the archives...")
+
+    # Find item 
+    item = UNCOMMON_ITEMS['uncommon'][str(roll)]
+
+    # Get item data
+    item_name = item["name"]
+    item_attn = item["attn"]
+    item_desc = item["desc"]
+
+    # Prep Item Embed for sending to user
+    embed = discord.Embed(
+      title = item_name,
+      color = discord.Color.green()
+    )
+    embed.add_field( name = "Requires Attunement?",
+                     value = item_attn,
+                     inline = False )
+    embed.add_field( name = "Description",
+                     value = item_desc,
+                     inline = False )
+
+    # Display Item to user
+    await ctx.send( embed = embed )
+
+    cursor.close()
+    db.close()
+
+    # End of rollUncommon() function
+    return 
+
+  # rollRare_admin function
+  @gachaadmin.command( name = "ra", pass_context = True )
+  @commands.is_owner()
+  async def rollRareAdmin( self, ctx, arg = None ):
+
+    message = ctx.message
+    total_items = len(RARE_ITEMS['rare'])
+
+    # Get Random Number 
+    await ctx.send( f"Rolling for { total_items } potential items...")
+    roll = randint( 1, total_items)
+    await ctx.send( f"Pulled { roll }! Grabbing item from the archives...")
+
+    # Find item 
+    item = RARE_ITEMS['rare'][str(roll)]
+
+    # Get item data
+    item_name = item["name"]
+    item_attn = item["attn"]
+    item_desc = item["desc"]
+
+    # Prep Item Embed for sending to user
+    embed = discord.Embed(
+      title = item_name,
+      color = discord.Color.blue()
+    )
+    embed.add_field( name = "Requires Attunement?",
+                     value = item_attn,
+                     inline = False )
+    embed.add_field( name = "Description",
+                     value = item_desc,
+                     inline = False )
+
+    # Display Item to user
+    await ctx.send( embed = embed )
+
+    cursor.close()
+    db.close()
+
+    # End of rollUncommon() function
+    return 
 
   # rollVeryRare_admin
   
