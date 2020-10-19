@@ -41,8 +41,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     with open( RARE_ITEMS_PATH, READ_TAG ) as read_file:
       RARE_ITEMS = json.load( read_file )
 
-    print( f'Loaded {len(UNCOMMON_ITEMS['uncommon'])} uncommon magic items!' )
-    print( f'Loaded {len(RARE_ITEMS['uncommon'])} rare magic items!' )
+    print( f"Loaded {len(UNCOMMON_ITEMS['uncommon'])} uncommon magic items!" )
+    print( f"Loaded {len(RARE_ITEMS['rare'])} rare magic items!" )
 
     # Import / Create SQL Databases 
 
