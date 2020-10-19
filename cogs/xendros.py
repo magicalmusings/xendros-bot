@@ -1158,6 +1158,12 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     cursor.execute( f"SELECT gold, gacha_rolls FROM char_data WHERE char_id = '{char_id}'")
     result = cursor.fetchone()
 
+    if result is None:
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
+      cursor.close()
+      db.close()
+      return 
+
     gold = int( result[0] )
     gacha_rolls = int( result[1] )
 
