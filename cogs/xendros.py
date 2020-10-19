@@ -50,6 +50,16 @@ class ERROR_CODES( enum.Enum ):
   SWITCHCHAR_CHAR_SLOT_TWO_ERROR = 11
   SWITCHCHAR_CHAR_SLOT_THREE_ERROR = 12
   SWITCHCHAR_ONE_CHAR_ERROR = 13
+  BALANCE_URL_ERROR = 14
+  DEPOSIT_ARGS_LENGTH_ERROR = 15
+  DEPOSIT_CURRENCY_ERROR = 16
+  WITHDRAW_ARGS_LENGTH_ERROR = 17
+  WITHDRAW_CURRENCY_ERROR = 18
+  SETBAL_ARGS_LENGTH_ERROR = 19
+  SETBAL_CURRENCY_ERROR = 20
+  GACHAROLL_SUBCOMMAND_ERROR = 21
+  GACHAROLL_NOT_ENOUGH_MONEY_ERROR = 22
+  GACHAADMIN_SUBCOMMAND_ERROR = 23
 
 class XendrosCog( commands.Cog, name = "Xendros" ):
 
@@ -123,7 +133,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       ERROR_CODES.NO_ERROR: "No Error",
       ERROR_CODES.ADD_ARGS_LENGTH_ERROR:"I need a name and url for tracking inventory, darling. Try running the command again like this: ```!x add <char_name> <gsheet url> ```",
       ERROR_CODES.USER_ID_NOT_FOUND_ERROR: "I don't seem to have any characters registered with your user ID. Please attempt to add a character using ```!x add <char_name> <gsheet_url>```",
-      ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR:"There seems to be a mistake here. I do not have your character on file. Please attempt to add a character using ```!x add <char_name> <gsheet_url>",
+      ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR:"There seems to be a mistake here. I do not have your character on file. Please attempt to add a character using ```!x add <char_name> <gsheet_url>```",
       ERROR_CODES.TOO_MANY_CHARS_ERROR: "Darling, you already have three characters registered with me. How many more do you need? Consider deleting one using ```!x delete <char_number>```",
       ERROR_CODES.DELETE_ARGS_LENGTH_ERROR: "Alas darling, you must tell me which character you'd like to delete to. Try using the command like this: ```!x delete <char_slot>```",
       ERROR_CODES.CHAR_SLOT_EMPTY_ERROR: "Unfortunately, I cannot delete that which does not exist. That character slot is currently empty in my books.",
@@ -134,6 +144,16 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       ERROR_CODES.SWITCHCHAR_CHAR_SLOT_TWO_ERROR: "You do not have a character registered with Slot 2. Consider adding another using ```!x add <char_name> <gsheet url>```",
       ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR: "You do not have a character registered with Slot 3. Consider adding another using ```!x add <char_name> <gsheet url>```",
       ERROR_CODES.SWITCHCHAR_ONE_CHAR_ERROR: "You only have one character registered with me, love. Consider adding another using ```!x add <char_name> <gsheet url>```",
+      ERROR_CODES.BALANCE_URL_ERROR: "The url given for this character is broken. Consider deleting and resubmitting information using ```!x delete <char_slot>\n!x add <char_name> <gsheet url>```",
+      ERROR_CODES.DEPOSIT_ARGS_LENGTH_ERROR: "Unfortunately, you've messed up the command. Try running it this way:```!x deposit <char_id> <currency> <amount>```",
+      ERROR_CODES.DEPOSIT_CURRENCY_ERROR: "That is not a currency that I can currently track. Consider retyping the command with a valid currency",
+      ERROR_CODES.WITHDRAW_ARGS_LENGTH_ERROR: "Unfortunately, you've messed up the command. Try running it this way:```!x withdraw <char_id> <currency> <amount>```",
+      ERROR_CODES.WITHDRAW_CURRENCY_ERROR: "That is not a currency that I can currently track. Consider retyping the command with a valid currency",
+      ERROR_CODES.SETBAL_ARGS_LENGTH_ERROR: "Unfortunately, you've messed up the command. Try running it this way:```!x withdraw <char_id> <currency> <amount>```",
+      ERROR_CODES.SETBAL_CURRENCY_ERROR: "That is not a currency that I can currently track. Consider retyping the command with a valid currency",
+      ERROR_CODES.GACHAROLL_SUBCOMMAND_ERROR: "Invalid subcommand passed... please try using the command like ```!x gacharoll <rarity>```",
+      ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR: "Seems like you don't have enough gold to roll... Come back when you're not broke!",
+      ERROR_CODES.GACHAADMIN_SUBCOMMAND_ERROR: "Invalid subcommand passed... please try using the command like ```!x gachaadmin <rarity>```",
 
     }
 
@@ -273,8 +293,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   # - allows users to delete their registered character with Xendros
   @commands.command( name = "delete", pass_context = True, aliases = ["del", "d"] )
   async def delete( self, ctx, arg = None ):
-
-    # TODO: Implement delete function
 
     message = ctx.message 
 
@@ -643,7 +661,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If the player has not yet registered with the bot
     if result is None:
 
-      await ctx.send( "Hmm, it seems it's your first time in my shop. Please register with me using ```!x add <character name> <gsheet link>```")
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -665,7 +683,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     result = cursor.fetchone()
 
     if result is None:
-      await ctx.send( "Hmm, it seems it's your first time in my shop. Please register with me using ```!x add <character name> <gsheet link>```")
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -684,28 +702,33 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     gacha_rolls = int( result[11] )
 
     # Create Embed for display
-
-    embed = discord.Embed(
-      title = f'{ char_name }',
-      url = f'{ drive_link }',
-      color = discord.Color.dark_green()
-    )
-    embed.add_field( name = "Action Points",
-                     value = f"{ action_points } AP",
-                     inline = True )
-    embed.add_field( name = "Downtime",
-                     value = f"{ downtime } DT",
-                     inline = True )
-    embed.add_field( name = "Loremaster Tokens",
-                     value = f"{ lore_tokens } LT",
-                     inline = True )      
-    embed.add_field( name = "Current Balance",
-                     value = f"{platinum} pp, {electrum} ep, {gold} gp, {silver} sp, {copper} cp",
-                     inline = False )
-    embed.add_field( name = "Total Gacha Rolls Made",
-                     value = f"{ gacha_rolls }",
-                     inline = True ) 
-    embed.set_footer( text = f"User ID: {user_id}, Char ID: {char_id}")
+    try: 
+      embed = discord.Embed(
+        title = f'{ char_name }',
+        url = f'{ drive_link }',
+        color = discord.Color.dark_green()
+      )
+      embed.add_field( name = "Action Points",
+                      value = f"{ action_points } AP",
+                      inline = True )
+      embed.add_field( name = "Downtime",
+                      value = f"{ downtime } DT",
+                      inline = True )
+      embed.add_field( name = "Loremaster Tokens",
+                      value = f"{ lore_tokens } LT",
+                      inline = True )      
+      embed.add_field( name = "Current Balance",
+                      value = f"{platinum} pp, {electrum} ep, {gold} gp, {silver} sp, {copper} cp",
+                      inline = False )
+      embed.add_field( name = "Total Gacha Rolls Made",
+                      value = f"{ gacha_rolls }",
+                      inline = True ) 
+      embed.set_footer( text = f"User ID: {user_id}, Char ID: {char_id}")
+    except:
+      await self.displayErrorMessage( ctx, ERROR_CODES.BALANCE_URL_ERROR )
+      cursor.close()
+      db.close()
+      return
 
     await ctx.send( embed = embed )    
 
@@ -721,14 +744,15 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If # of arguments is not correct
     if len( args ) < 3:
-      await ctx.send( "Unfortunately, you've messed up the command. Try running it this way:```!x deposit <char_id> <currency> <amount>")
+      await self.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_ARGS_LENGTH_ERROR )
+      return
 
     currency = CURRENCY_SWITCH.get( args[1], "NULL")
 
     # ERROR CASE: If input currency is invalid
     if currency == "NULL":
 
-      await ctx.send("That is not a currency that I can currently track. Consider retyping the command with a valid currency")
+      await self.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_CURRENCY_ERROR )
       return
 
     db = sqlite3.connect( CHAR_DATA_PATH )
@@ -739,7 +763,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If result is null 
     if result is None:
 
-      await ctx.send( "Hmm, it seems I don't have that user on my list. Please have them register with me using ```!x add <char_name> <gsheet url>```")
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -773,13 +797,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If # of arguments is not correct
     if len( args ) < 3:
-      await ctx.send( "Unfortunately, you've messed up the command. Try running it this way:```!x withdraw <char_id> <currency> <amount>")
+      await self.displayErrorMessage( ctx, ERROR_CODES.WITHDRAW_ARGS_LENGTH_ERROR )
+      return
 
     currency = CURRENCY_SWITCH.get( args[1], "NULL")
 
     if currency == "NULL":
 
-      await ctx.send("That is not a currency that I can currently track. Consider retyping the command with a valid currency")
+      await self.displayErrorMessage( ctx, ERROR_CODES.WITHDRAW_CURRENCY_ERROR )
       return
 
     db = sqlite3.connect( CHAR_DATA_PATH )
@@ -789,7 +814,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     if result is None:
 
-      await ctx.send( "Hmm, it seems I don't have that user on my list. Please have them register with me using ```!x add <char_name> <gsheet url>```")
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -824,13 +849,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If # of arguments is not correct
     if len( args ) < 3:
-      await ctx.send( "Unfortunately, you've messed up the command. Try running it this way:```!x withdraw <char_id> <currency> <amount>")
+      await self.displayErrorMessage( ctx, ERROR_CODES.SETBAL_ARGS_LENGTH_ERROR )
+      return
 
     currency = CURRENCY_SWITCH.get( args[1], "NULL")
 
     if currency == "NULL":
 
-      await ctx.send("That is not a currency that I can currently track. Consider retyping the command with a valid currency")
+      await self.displayErrorMessage( ctx, ERROR_CODES.SETBAL_CURRENCY_ERROR )
       return
 
     db = sqlite3.connect( CHAR_DATA_PATH )
@@ -840,7 +866,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     if result is None:
 
-      await ctx.send( "Hmm, it seems I don't have that user on my list. Please have them register with me using ```!x add <char_name> <gsheet url>```")
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -991,7 +1017,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     if ctx.invoked_subcommand is None:
 
-      await ctx.send( "Invalid subcommand passed..." )
+      await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_SUBCOMMAND_ERROR )
+      return 
 
   # rollUncommon function
   @gacharoll.command( name = "uncommon", pass_context = True, aliases = ["UC", "uc"])
@@ -1010,7 +1037,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If result is none (i.e. user is not registered)
     if result is None:
-      
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return 
@@ -1034,7 +1061,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     result = cursor.fetchone()
 
     if result is None:
-
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
+      cursor.close()
+      db.close()
       return
 
     gold = int( result[0] )
@@ -1042,7 +1071,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: Not enough money to roll
     if gold < UC_ROLL_COST:
-
+      await self.displayErrorMessage( ctx, ERROR_CODES.CACHAROLL_NOT_ENOUGH_MONEY_ERROR )
       cursor.close()
       db.close()
       return
@@ -1106,7 +1135,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If result is none (i.e. user is not registered)
     if result is None:
-      
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return 
@@ -1134,7 +1163,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: Not enough money to roll
     if gold < R_ROLL_COST:
-
+      await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
       cursor.close()
       db.close()
       return
@@ -1191,8 +1220,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   async def gachaadmin( self, ctx ):
 
     if ctx.invoked_subcommand is None:
-
-      await ctx.send( "Invalid subcommand passed..." )
+      await self.displayErrorMessage( ctx, ERROR_CODES.GACHAADMIN_SUBCOMMAND_ERROR)
+      return
 
   # rollUncommon_admin
 
