@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import disputils
+import enum
 import json
 from jsonmerge import merge
 from random import randint
