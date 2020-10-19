@@ -1,6 +1,10 @@
 import discord
 from discord.ext import commands
 import disputils
+import json
+from jsonmerge import merge
+import sqlite3
+
 import sqlite3
 
 APPEND_TAG = "a"
@@ -15,7 +19,11 @@ CURRENCY_SWITCH = {
       'pp': "platinum",
       'sp': 'silver'
     }
+RARE_ITEMS = {}
+RARE_ITEMS_PATH = "data/rare.json"
 READ_TAG = "r"
+UNCOMMON_ITEMS = {}
+UNCOMMON_ITEMS_PATH = "data/uncommon.json"
 USER_CHARS_DATA_PATH = "data/user_chars.sqlite"
 WRITE_TAG = "w"
 
@@ -24,6 +32,17 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   def __init__( self, bot ):
 
     self.bot = bot
+
+    # Import Magic Item Data
+
+    with open( UNCOMMON_ITEMS_PATH, READ_TAG ) as read_file:
+      UNCOMMON_ITEMS = json.load( read_file )
+
+    with open( RARE_ITEMS_PATH, READ_TAG ) as read_file:
+      RARE_ITEMS = json.load( read_file )
+
+    print( UNCOMMON_ITEMS )
+    print( RARE_ITEMS )
 
     # Import / Create SQL Databases 
 
