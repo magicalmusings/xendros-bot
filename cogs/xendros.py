@@ -1058,7 +1058,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Calculate amt of currency to remove from currency_one
     # Ex: for 12 pp -> gp, floor( 120 * 0.1 ) = 12 pp to subtract
-    curr_to_subtract = math.floor( curr_calc * backwards_conversion_rate )
+    curr_to_subtract = math.floor( curr_to_add * backwards_conversion_rate )
 
     # Subtract amt of currency from currency_one total 
     # Ex: for 12 pp -> gp, 12 - 12 = 0 remaining pp 
