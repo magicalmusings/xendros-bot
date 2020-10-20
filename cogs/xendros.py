@@ -385,10 +385,10 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.is_owner()
   async def erase( self, ctx, arg ):
 
-    message = ctx.message 
+    if arg is None:
+      return
 
-    await ctx.send( type(message.author.id) )
-    await ctx.send( type(arg) )
+    message = ctx.message 
 
     db = sqlite3.connect( USER_CHARS_DATA_PATH )
     cursor = db.cursor()
@@ -909,7 +909,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     return 
 
   # currex function
-  # TODO: complete currex function
   @commands.command( name = "currex", pass_context = True, aliases = ["cx"] )
   async def currex( self, ctx, *args ):
     # EX USAGE: !x currex <currency_one> <currency_two>
@@ -1095,7 +1094,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     cursor.execute( sql, values )
     db.commit()
 
-    # Display conversion success to user
+    # Display conversion success and balance to user
     await ctx.send( f"Success! I've converted your **{amt_to_convert}** {currency_one} into **{curr_to_add}** {currency_two}!! Your new balance is: ")
     await self.balance( ctx )
 
