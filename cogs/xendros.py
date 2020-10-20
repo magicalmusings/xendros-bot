@@ -1076,7 +1076,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Update character data 
     sql = ( f"""UPDATE char_data SET {currency_one} = ?, {currency_two} = ? WHERE char_id = ?""")
-    values = ( new_curr_one_amt, new_curr_two_amt, message.author.id )
+    values = ( new_curr_one_amt, new_curr_two_amt, char_id )
     cursor.execute( sql, values )
 
     # Display conversion success to user
