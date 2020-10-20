@@ -1054,7 +1054,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Add amt of currency to new currency_two total 
     # Ex: for 12 pp -> gp, 100 + 120 = 220 (new_curr_two_amt)
-    new_curr_two_amt = curr_two_amt + ( curr_calc )
+    new_curr_two_amt = curr_two_amt + ( curr_to_add )
 
     # Calculate amt of currency to remove from currency_one
     # Ex: for 12 pp -> gp, floor( 120 * 0.1 ) = 12 pp to subtract
