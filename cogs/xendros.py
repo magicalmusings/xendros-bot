@@ -627,7 +627,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       embed.add_field( name = "Character Slot 1", 
                        value = f"NONE",
                        inline = False )
-    elif char_two_id != 0:
+    
+    if char_two_id != 0:
       cursor.execute( f"""SELECT char_name FROM char_data WHERE char_id = '{char_two_id}'""")
       result = cursor.fetchone()
       char_name = str( result[0] )
@@ -638,7 +639,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       embed.add_field( name = "Character Slot 2", 
                        value = f"NONE",
                        inline = False )
-    elif char_three_id != 0:
+    
+    if char_three_id != 0:
       cursor.execute( f"""SELECT char_name FROM char_data WHERE char_id = '{char_three_id}'""")
       result = cursor.fetchone()
       char_name = str( result[0] )
