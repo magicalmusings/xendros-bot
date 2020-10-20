@@ -996,10 +996,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       return
 
     # Check amt of first currency
-    curr_one_amt = int( result[0] )
-    print( curr_one_amt )
+    curr_one_amt = int( result[0] )S
     curr_two_amt = int( result[1] )
-    print( curr_two_amt )
 
     conversion_chart = {
       "platinum": {
@@ -1043,7 +1041,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     backwards_conversion_rate = conversion_chart[currency_two][currency_one]
 
     # ERROR CASE: Converting between the same currency
-    if conversion_rate == 1:
+    if conversion_rate == 1 or backwards_conversion_rate == 1:
       await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_NO_CONVERSION_NEEDED_ERROR )
       cursor.close()
       db.close()
@@ -1056,7 +1054,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Calculate amt of currency to add to currency_two
     # Ex: for 12 pp -> gp , 12pp x 10 (pp->gp conversion rate) = 120 gp to add
     curr_to_add = math.floor( curr_one_amt * conversion_rate )
-    print( curr_to_add )
 
     # ERROR CASE: 
     if curr_to_add <= 0:
@@ -1068,17 +1065,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Add amt of currency to new currency_two total 
     # Ex: for 12 pp -> gp, 100 + 120 = 220 (new_curr_two_amt)
     new_curr_two_amt = curr_two_amt + ( curr_to_add )
-    print( new_curr_two_amt )
 
     # Calculate amt of currency to remove from currency_one
     # Ex: for 12 pp -> gp, floor( 120 * 0.1 ) = 12 pp to subtract
     curr_to_subtract = math.floor( curr_to_add * backwards_conversion_rate )
-    print( curr_to_subtract )
 
     # Subtract amt of currency from currency_one total 
     # Ex: for 12 pp -> gp, 12 - 12 = 0 remaining pp 
     new_curr_one_amt = curr_one_amt - ( curr_to_subtract )
-    print( new_curr_one_amt )
 
     # Update character data 
     sql = ( f"""UPDATE char_data SET {currency_one} = ?, {currency_two} = ? WHERE char_id = ?""")
@@ -1088,7 +1082,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Display conversion success to user
     await ctx.send( f"Success! I've converted your {curr_one_amt} {currency_one} into {curr_to_add} {currency_two}!! Your new balance for each is: ")
-    await ctx.send( f"{currency_one} : {new_curr_one_amt}\n{currency_two} : {new_curr_two_amt}")
+    await ctx.send( f"**{currency_one.capitalize()}** : {new_curr_one_amt}\n**{currency_two.capitalize()}** : {new_curr_two_amt}")
 
 
     cursor.close()
