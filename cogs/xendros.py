@@ -997,7 +997,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Check amt of first currency
     curr_one_amt = int( result[0] )
+    print( curr_one_amt )
     curr_two_amt = int( result[0] )
+    print( curr_two_amt )
 
     conversion_chart = {
       "platinum": {
