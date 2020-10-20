@@ -1078,6 +1078,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     sql = ( f"""UPDATE char_data SET {currency_one} = ?, {currency_two} = ? WHERE char_id = ?""")
     values = ( new_curr_one_amt, new_curr_two_amt, char_id )
     cursor.execute( sql, values )
+    db.commit()
 
     # Display conversion success to user
     await ctx.send( f"Success! I've converted your {curr_one_amt} {currency_one} into {curr_to_add} {currency_two}!! Your new balance for each is: ")
