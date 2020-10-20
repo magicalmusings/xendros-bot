@@ -915,7 +915,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # EX USAGE: !x currex <currency_one> <currency_two>
 
     # ERROR CASE: if # of args is incorrect
-    if len( args ) < 2:
+    if len( args ) < 3:
       await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_ARGS_LENGTH_ERROR )
       return 
 
@@ -946,8 +946,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     elif active_char == 3:
       char_id = char_three_id
 
-    currency_one = CURRENCY_SWITCH.get( args[0], "NULL")
-    currency_two = CURRENCY_SWITCH.get( args[1], "NULL")
+    amt_to_convert = int( args[0] )
+    currency_one = CURRENCY_SWITCH.get( args[1], "NULL")
+    currency_two = CURRENCY_SWITCH.get( args[2], "NULL")
 
     # ERROR CASE: If input currency is invalid
     if currency_one == "NULL" or currency_two == "NULL":
@@ -997,6 +998,20 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Check amt of first currency
     curr_one_amt = int( result[0] )
+
+    # ERROR CASE: if we don't have enough currency in order to make it work
+    if curr_one_amt == 0:
+      # Error message 
+      cursor.close()
+      db.close()
+      return 
+
+    # If we don't have enough currency, but still have currency:
+    #  - use what's left to convert. 
+    if curr_one_amt - amt_to_convert < 0:
+      await ctx.send( f"Oops, looks like you don't have all the currency to convert. I'll just use the **{curr_one_amt}** {currency_one} that's left in your account." )
+      amt_to_convert = curr_one_amt
+
     curr_two_amt = int( result[1] )
 
     conversion_chart = {
@@ -1053,7 +1068,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # Calculate amt of currency to add to currency_two
     # Ex: for 12 pp -> gp , 12pp x 10 (pp->gp conversion rate) = 120 gp to add
-    curr_to_add = math.floor( curr_one_amt * conversion_rate )
+    curr_to_add = math.floor( amt_to_convert * conversion_rate )
 
     # ERROR CASE: 
     if curr_to_add <= 0:
@@ -1081,7 +1096,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     db.commit()
 
     # Display conversion success to user
-    await ctx.send( f"Success! I've converted your **{curr_one_amt}** {currency_one} into **{curr_to_add}** {currency_two}!! Your new balance is: ")
+    await ctx.send( f"Success! I've converted your **{amt_to_convert}** {currency_one} into **{curr_to_add}** {currency_two}!! Your new balance is: ")
     await self.balance( ctx )
 
     # close out database
