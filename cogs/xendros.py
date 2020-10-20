@@ -1081,10 +1081,10 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     db.commit()
 
     # Display conversion success to user
-    await ctx.send( f"Success! I've converted your {curr_one_amt} {currency_one} into {curr_to_add} {currency_two}!! Your new balance for each is: ")
-    await ctx.send( f"**{currency_one.capitalize()}**: {new_curr_one_amt}\n**{currency_two.capitalize()}**: {new_curr_two_amt}")
+    await ctx.send( f"Success! I've converted your {curr_one_amt} {currency_one} into {curr_to_add} {currency_two}!! Your new balance is: ")
+    await self.balance( ctx )
 
-
+    # close out database
     cursor.close()
     db.close()
 
