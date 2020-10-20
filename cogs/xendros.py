@@ -4,6 +4,7 @@ import disputils
 import enum
 import json
 from jsonmerge import merge
+import math
 from random import randint
 import sqlite3
 
@@ -60,6 +61,12 @@ class ERROR_CODES( enum.Enum ):
   GACHAROLL_SUBCOMMAND_ERROR = 21
   GACHAROLL_NOT_ENOUGH_MONEY_ERROR = 22
   GACHAADMIN_SUBCOMMAND_ERROR = 23
+  CURREX_ARGS_LENGTH_ERROR = 24
+  CURREX_INVALID_CURRENCY_ERROR = 25
+  CURREX_DOWNTIME_INPUT_ERROR = 26
+  CURREX_INVALID_CONVERSION_ERROR = 27
+  CURREX_NO_CONVERSION_NEEDED_ERROR = 28
+  CURREX_AP_LT_CONVERSION_ERROR = 29
 
 class XendrosCog( commands.Cog, name = "Xendros" ):
 
@@ -154,13 +161,18 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       ERROR_CODES.GACHAROLL_SUBCOMMAND_ERROR: "Invalid subcommand passed... please try using the command like ```!x gacharoll <rarity>```",
       ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR: "Seems like you don't have enough gold to roll... Come back when you're not broke!",
       ERROR_CODES.GACHAADMIN_SUBCOMMAND_ERROR: "Invalid subcommand passed... please try using the command like ```!x gachaadmin <rarity>```",
-
+      ERROR_CODES.CURREX_ARGS_LENGTH_ERROR: "Sorry, I can't convert any currency with this information. Try using the command like this: ```!x currex <curr_one> <curr_two>```",
+      ERROR_CODES.CURREX_INVALID_CURRENCY_ERROR: "That is not a currency that I can currently track. Consider retyping the command with a valid currency",
+      ERROR_CODES.CURREX_DOWNTIME_INPUT_ERROR: "I cannot convert downtime into money, unfortunately. Consider retyping the command with a valid currency",
+      ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR: "I cannot convert AP / LT into money, or vice versa. Consider retyping the command with a valid currency",
+      ERROR_CODES.CURREX_NO_CONVERSION_NEEDED_ERROR: "Silly! Conversion between the same currency is unnecessary.",
+      # TODO: Implement ap/lt conversion function 
+      ERROR_CODES.CURREX_AP_LT_CONVERSION_ERROR: "I cannot convert AP to LT or vice versa with this command. Please consider using another in order to do so. "
     }
 
     error_msg_str = error_messages.get( error_code, "CODE NOT FOUND" )
 
     if error_msg_str == "CODE NOT FOUND":
-      
       print( "ERROR CODE NOT FOUND, RETURNING EMPTY STRING")
       error_msg_str = ""
 
@@ -901,7 +913,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: if # of args is incorrect
     if len( args ) < 2:
-
+      await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_ARGS_LENGTH_ERROR )
       return 
 
     message = ctx.message
@@ -914,7 +926,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If user is not registered
     if result is None:
-
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -936,25 +948,33 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If input currency is invalid
     if currency_one == "NULL" or currency_two == "NULL":
-
-      await ctx.send("That is not a currency that I can currently track. Consider retyping the command with a valid currency")
+      await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CURRENCY_ERROR )
       cursor.close()
       db.close()
       return
+
     # ERROR CASE: If downtime is attempted for conversion
     elif currency_one == "downtime" or currency_two == "downtime":
-      await ctx.send("I cannot convert downtime into money, unfortunately. Consider retyping the command with a valid currency")
+      await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_DOWNTIME_INPUT_ERROR )
       cursor.close()
       db.close()
       return
+
+    elif currency_one == "action_points" or currency_one == "lore_tokens" or currency_two == "action_points" or currency_two == "lore_tokens":
+      await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_AP_LT_CONVERSION_ERROR )
+      cursor.close()
+      db.close()
+      return
+
     # ERROR CASE: If ap / lt and pp/ep/gp/sp/cp are being converted between.
     elif (currency_one == "action_points" or currency_one == "lore_tokens") and (currency_two == "platinum" or currency_two == "gold" or currency_two == "silver" or currency_two == "copper" or currency_two == "electrum"):
-      await ctx.send("I cannot convert AP / LT into money, or vice versa. Consider retyping the command with a valid currency")
+      await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR )
       cursor.close()
       db.close()
       return
+
     elif (currency_two == "action_points" or currency_two == "lore_tokens") and (currency_one == "platinum" or currency_one == "gold" or currency_one == "silver" or currency_one == "copper" or currency_one == "electrum"):
-      await ctx.send("I cannot convert AP / LT into money, or vice versa. Consider retyping the command with a valid currency")
+      await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR )
       cursor.close()
       db.close()
       return
@@ -967,7 +987,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If character does not exist
     if result is None:
-
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       cursor.close()
       db.close()
       return
@@ -977,36 +997,89 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     curr_two_amt = int( result[0] )
 
     conversion_chart = {
-      "action_points": 5,
-      "lore_tokens": 0.2,
-      "platinum": 0.1,
-      "electrum": 0.5,
-      "gold": 1,
-      "silver": 10,
-      "copper": 100
+      "platinum": {
+        "platinum": 1,
+        "electrum": 20,
+        "gold": 10,
+        "silver": 100,
+        "copper": 1000
+      },
+      "electrum": {
+        "platinum": 0.05,
+        "electrum": 1,
+        "gold": 0.5,
+        "silver": 5,
+        "copper": 50
+      },
+      "gold": {
+        "platinum": 0.1,
+        "electrum": 2,
+        "gold": 1,
+        "silver": 10,
+        "copper": 100
+      },
+      "silver": {
+        "platinum": 0.01,
+        "electrum": 0.2,
+        "gold": 0.1,
+        "silver": 1,
+        "copper": 10
+      },
+      "copper": {
+        "platinum": 0.001,
+        "electrum": 0.02,
+        "gold": 0.01,
+        "silver": 0.1,
+        "copper": 1
+      }
     }
 
-    curr_one_conversion = conversion_chart.get( currency_one, "NULL" )
-    curr_two_conversion = conversion_chart.get( currency_two, "NULL" )
+    conversion_rate = conversion_chart[currency_one][currency_two]
+    backwards_conversion_rate = conversion_chart[currency_two][currency_one]
 
-    # ERROR CASE: If amt cannot be converted
-
-    # Convert currency_one to currency_two
-    if curr_one_conversion == curr_two_conversion:
-
+    # ERROR CASE: Converting between the same currency
+    if conversion_rate == 1:
+      await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_NO_CONVERSION_NEEDED_ERROR )
+      cursor.close()
+      db.close()
       return
+    
+    # Examples of conversion are included below. For the purposes of examples, lets say the user currently has: 
+    # - curr_one_amt = 12 pp
+    # - curr_two_amt = 100 gp
 
-    elif curr_one_conversion < curr_two_conversion:
+    # Calculate amt of currency to add to currency_two
+    # Ex: for 12 pp -> gp , 12pp x 10 (pp->gp conversion rate) = 120 gp to add
+    curr_to_add = math.floor( curr_one_amt * conversion_rate )
 
-      new_curr_one_amt = curr_one_amt % curr_one_conversion
-      new_curr_two_amt = curr_one_amt * curr_one_conversion
+    # Add amt of currency to new currency_two total 
+    # Ex: for 12 pp -> gp, 100 + 120 = 220 (new_curr_two_amt)
+    new_curr_two_amt = curr_two_amt + ( curr_calc )
 
-    elif curr_one_conversion > curr_two_conversion:
+    # Calculate amt of currency to remove from currency_one
+    # Ex: for 12 pp -> gp, floor( 120 * 0.1 ) = 12 pp to subtract
+    curr_to_subtract = math.floor( curr_calc * backwards_conversion_rate )
 
-      new_curr_two_amt = floor(curr_one_amt / curr_one_conversion)
-      new_curr_one_amt = curr_one_amt % curr_one_conversion
+    # Subtract amt of currency from currency_one total 
+    # Ex: for 12 pp -> gp, 12 - 12 = 0 remaining pp 
+    new_curr_one_amt = curr_one_amt - ( curr_to_subtract )
 
     # Update character data 
+    sql = ( f"""UPDATE char_data SET {currency_one} = ?, {currency_two} = ? WHERE char_id = ?""")
+    values = ( new_curr_one_amt, new_curr_two_amt, message.author.id )
+    cursor.execute( sql, values )
+
+    # Display conversion success to user
+    await ctx.send( f"Success! I've converted your {curr_one_amt} {currency_one} into {curr_to_add} {currency_two}!! Your new balance for each is: ")
+    await ctx.send( f"{currency_one} : {new_curr_one_amt}\n{currency_two} : {new_curr_two_amt}")
+
+
+    cursor.close()
+    db.close()
+
+    # End of currex function
+    return
+
 
   
   ## Gacharoll Functions
