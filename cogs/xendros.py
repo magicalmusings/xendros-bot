@@ -1221,16 +1221,16 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   # rollLegendary function
   
   # GachaAdmin Command Group
-  @commands.group( name = "gachaadmin", pass_context = True , aliases = ["ga"])
+  @commands.group( name = "gachadebug", pass_context = True , aliases = ["gd"])
   @commands.is_owner()
-  async def gachaadmin( self, ctx ):
+  async def gachadebug( self, ctx ):
 
     if ctx.invoked_subcommand is None:
       await self.displayErrorMessage( ctx, ERROR_CODES.GACHAADMIN_SUBCOMMAND_ERROR)
       return
 
   # rollUncommon_admin function
-  @gachaadmin.command( name = "uca", pass_context = True )
+  @gachadebug.command( name = "uca", pass_context = True )
   @commands.is_owner()
   async def rollUncommonAdmin( self, ctx, arg = None ):
 
@@ -1269,7 +1269,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     return 
 
   # rollRare_admin function
-  @gachaadmin.command( name = "ra", pass_context = True )
+  @gachadebug.command( name = "ra", pass_context = True )
   @commands.is_owner()
   async def rollRareAdmin( self, ctx, arg = None ):
 
