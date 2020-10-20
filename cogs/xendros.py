@@ -894,10 +894,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     return 
 
   # currex function
+  # TODO: complete currex function
   @commands.command( name = "currex", pass_context = True, aliases = ["cx"] )
   async def currex( self, ctx, *args ):
-
-    # TODO: complete currex function
     # EX USAGE: !x currex <currency_one> <currency_two>
 
     # ERROR CASE: if # of args is incorrect

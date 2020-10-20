@@ -31,10 +31,10 @@ class ShopkeepCog( commands.Cog , name = "Shopkeeping" ):
 
   def __init__( self, bot ):
 
-    # TODO: Fix user_chars table 
-    # TODO: Fix char_data table
-    # TODO: delete json files
-    # TODO: remove gsheet integration
+    #  : Fix user_chars table 
+    #  : Fix char_data table
+    #  : delete json files
+    #  : remove gsheet integration
 
     self.bot = bot
   
@@ -89,7 +89,7 @@ class ShopkeepCog( commands.Cog , name = "Shopkeeping" ):
   @commands.command( name = "add", pass_context = True )
   async def add( self, ctx, arg = None ):
 
-    # TODO: Fix Add
+    #  : Fix Add
 
     if arg is None:
       await ctx.send( "I need a url for tracking inventory, darling. Try running the command again like this: ```!x add <gsheet url>")
@@ -197,7 +197,7 @@ class ShopkeepCog( commands.Cog , name = "Shopkeeping" ):
   @commands.command( name = "switchchar", pass_context = True )
   async def switchchar( self, ctx, arg = None ):
 
-    # TODO: Fix switchchar
+    #  : Fix switchchar
 
     if arg is None:
       await ctx.send( "Alas darling, you must tell me which character you'd like to switch to. Try using the command like this: ```!x switchchar <char_slot>```")
@@ -291,7 +291,7 @@ class ShopkeepCog( commands.Cog , name = "Shopkeeping" ):
   @commands.command( name = "balance", pass_context = True )
   async def balance( self, ctx ):
 
-    # TODO: Fix Balance
+    #  : Fix Balance
 
     message = ctx.message
 
@@ -347,7 +347,7 @@ class ShopkeepCog( commands.Cog , name = "Shopkeeping" ):
   @commands.is_owner()
   async def deposit( self, ctx, *args ):
 
-    # TODO: Fix deposit
+    #  : Fix deposit
 
     if len( args ) < 2:
       await ctx.send( "Unfortunately, you've messed up the command. Try running it this way:```!x deposit <char_id> <amount>")
@@ -386,7 +386,7 @@ class ShopkeepCog( commands.Cog , name = "Shopkeeping" ):
   @commands.is_owner()
   async def withdraw( self, ctx, *args ):
 
-    # TODO: Fix withdraw
+    #  : Fix withdraw
 
     if len( args ) < 2:
         await ctx.send( "Unfortunately, you've messed up the command. Try running it this way:```!x withdraw <char_id> <amount>")
@@ -427,7 +427,7 @@ class ShopkeepCog( commands.Cog , name = "Shopkeeping" ):
   @commands.is_owner()
   async def setbal( self, ctx, *args ):
 
-    # TODO: Fix setbal
+    #  : Fix setbal
 
     if len( args ) < 2:
       await ctx.send( "You've fudged up the numbers a smidge. Try running it this way:```!x setbal <char_id> <amount>")
