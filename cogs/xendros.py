@@ -67,6 +67,7 @@ class ERROR_CODES( enum.Enum ):
   CURREX_INVALID_CONVERSION_ERROR = 27
   CURREX_NO_CONVERSION_NEEDED_ERROR = 28
   CURREX_AP_LT_CONVERSION_ERROR = 29
+  CURREX_NOT_ENOUGH_CURRENCY_ERROR = 30
 
 class XendrosCog( commands.Cog, name = "Xendros" ):
 
@@ -167,7 +168,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR: "I cannot convert AP / LT into money, or vice versa. Consider retyping the command with a valid currency",
       ERROR_CODES.CURREX_NO_CONVERSION_NEEDED_ERROR: "Silly! Conversion between the same currency is unnecessary.",
       # TODO: Implement ap/lt conversion function 
-      ERROR_CODES.CURREX_AP_LT_CONVERSION_ERROR: "I cannot convert AP to LT or vice versa with this command. Please consider using another in order to do so. "
+      ERROR_CODES.CURREX_AP_LT_CONVERSION_ERROR: "I cannot convert AP to LT or vice versa with this command. Please consider using another in order to do so. ",
+      ERROR_CODES.CURREX_NOT_ENOUGH_CURRENCY_ERROR: "There is unfortunately not enough currency to convert. Consider checking your balance using ```!x balance``` before attempting another conversion.",
+
     }
 
     error_msg_str = error_messages.get( error_code, "CODE NOT FOUND" )
@@ -1051,6 +1054,13 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Calculate amt of currency to add to currency_two
     # Ex: for 12 pp -> gp , 12pp x 10 (pp->gp conversion rate) = 120 gp to add
     curr_to_add = math.floor( curr_one_amt * conversion_rate )
+
+    # ERROR CASE: 
+    if curr_to_add <= 0:
+      await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_NOT_ENOUGH_CURRENCY_ERROR )
+      cursor.close()
+      db.close()
+      return
 
     # Add amt of currency to new currency_two total 
     # Ex: for 12 pp -> gp, 100 + 120 = 220 (new_curr_two_amt)
