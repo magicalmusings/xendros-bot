@@ -1159,7 +1159,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     await ctx.send( "C6: Created csv file in data directory ")
 
     csvFile.writerow( headers )
-    csvFile.writerows( results )
+    csvFile.writerows( result )
 
     print( 'data export successful')
 
