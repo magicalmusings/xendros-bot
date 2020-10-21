@@ -23,15 +23,15 @@ CURRENCY_SWITCH = {
 L_ROLL_COST = 50000
 LEGENDARY_ITEMS = {}
 LEGENDARY_ITEMS_PATH = "data/legendary.json"
-R_ROLL_COST = 2500
+R_ROLL_COST = 2750
 RARE_ITEMS = {}
 RARE_ITEMS_PATH = "data/rare.json"
 READ_TAG = "r"
-UC_ROLL_COST = 250
+UC_ROLL_COST = 275
 UNCOMMON_ITEMS = {}
 UNCOMMON_ITEMS_PATH = "data/uncommon.json"
 USER_CHARS_DATA_PATH = "data/user_chars.sqlite"
-VR_ROLL_COST = 25000
+VR_ROLL_COST = 27500
 VERYRARE_ITEMS = {}
 VERYRARE_ITEMS_PATH = "data/veryrare.json"
 WRITE_TAG = "w"
@@ -529,7 +529,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
   # charlink function
   # - allows users to get google drive link to character at any point
-  @commands.command( name = "charlink", pass_context = True )
+  @commands.command( name = "charlink", pass_context = True , aliases = ['link'])
   async def charlink( self, ctx ):
 
     message = ctx.message
@@ -664,7 +664,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   ## Money / Currency Functions 
 
   # balance function
-  @commands.command( name = "balance", pass_context = True )
+  @commands.command( name = "balance", pass_context = True , aliases = ['bal'])
   async def balance( self, ctx ):
 
     message = ctx.message
@@ -755,7 +755,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # End of balance() function
 
   # deposit function 
-  @commands.command( name = "deposit", pass_context = True )
+  @commands.command( name = "deposit", pass_context = True , aliases = ['dep'])
   @commands.is_owner()
   async def deposit( self, ctx, *args ):
 
@@ -861,7 +861,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # End of withdraw() function
 
   # setbal function
-  @commands.command( name = "setbal", pass_context = True )
+  @commands.command( name = "setbal", pass_context = True , aliases = ['sb'])
   async def setbal( self, ctx, *args ):
 
     # ERROR CASE: If # of arguments is not correct
