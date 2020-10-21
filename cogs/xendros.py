@@ -1124,7 +1124,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     if arg == "user_chars":
       path = USER_CHARS_DATA_PATH
       sql = ("""SELECT user_id, active_char, char_one_id, char_two_id, char_three_id FROM user_chars ORDER BY user_id """)
-    elif arg == "char_data"
+    elif arg == "char_data":
       path = CHAR_DATA_PATH
       sql = ("""SELECT char_id, user_id, drive_link, char_name, action_points, downtime, lore_tokens, platinum, electrum, gold, silver, copper, gacha_rolls FROM char_data ORDER BY char_name """)
 
