@@ -1154,7 +1154,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     await ctx.send( "C5: Got date")
 
-    csvFile = csv.writer( open( f"data/{arg}_{dt_str}.csv", WRITE_TAG, newline=''), delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL, escapechar='\\')
+    csvFile = csv.writer( open( f"data/dump/{arg}_{dt_str}.csv", WRITE_TAG, newline=''), delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL, escapechar='\\')
 
     await ctx.send( "C6: Created csv file in data directory ")
 
