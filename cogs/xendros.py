@@ -1112,13 +1112,15 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
   # dump function
   @commands.command( name = "dump", pass_context = True )
-  async def dump( self, ctx, arg):
+  async def dump( self, ctx, arg = None ):
 
     if arg is None:
       # DUMP_ARG_LENGTH_ERROR
+      await ctx.send( "returned ")
       return
     elif arg != "user_chars" or arg != "char_data":
       # DUMP_INVALID_DB_ERROR
+      await ctx.send( "returned" )
       return
 
     await ctx.send( "C1: Checked Args")
