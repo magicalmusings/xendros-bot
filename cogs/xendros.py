@@ -1115,7 +1115,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   async def dump( self, ctx, *args ):
 
     arg = args[0]
-    ctx.send( arg )
+    await ctx.send( arg )
     
     if arg is None:
       # DUMP_ARG_LENGTH_ERROR
