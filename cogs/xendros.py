@@ -1116,6 +1116,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     arg = args[0]
     await ctx.send( arg )
+    await ctx.send( type( arg ) )
     
     if arg is None:
       # DUMP_ARG_LENGTH_ERROR
