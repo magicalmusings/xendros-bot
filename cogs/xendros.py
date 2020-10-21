@@ -1122,7 +1122,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       # DUMP_ARG_LENGTH_ERROR
       await ctx.send( "returned ")
       return
-    elif arg != "user_chars" or arg != "char_data":
+    elif arg != "user_chars" and arg != "char_data":
       # DUMP_INVALID_DB_ERROR
       await ctx.send( "returned" )
       return
