@@ -103,6 +103,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     cursor = db.cursor()
     cursor.execute( '''CREATE TABLE IF NOT EXISTS user_chars(
       user_id integer PRIMARY KEY,
+      user_name text,
       active_char integer DEFAULT 1,
       char_one_id integer DEFAULT 0,
       char_two_id integer DEFAULT 0,
@@ -218,10 +219,10 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
       sql = ("""
       INSERT INTO user_chars(
-        user_id, active_char, char_one_id, char_two_id, char_three_id
-      ) VALUES ( ? , ? , ? , ? , ? )
+        user_id, user_name, active_char, char_one_id, char_two_id, char_three_id
+      ) VALUES ( ?, ? , ? , ? , ? , ? )
       """)
-      values = ( message.author.id, 1, 0, 0, 0 )
+      values = ( message.author.id, message.author.name, 1, 0, 0, 0 )
       cursor.execute( sql, values )
       db.commit()
 
@@ -1131,7 +1132,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     if arg == "user_chars":
       path = USER_CHARS_DATA_PATH
-      sql = ("""SELECT user_id, active_char, char_one_id, char_two_id, char_three_id FROM user_chars ORDER BY user_id """)
+      sql = ("""SELECT user_name, user_id, active_char, char_one_id, char_two_id, char_three_id FROM user_chars ORDER BY user_name """)
     elif arg == "char_data":
       path = CHAR_DATA_PATH
       sql = ("""SELECT char_name, char_id, user_id, drive_link, action_points, downtime, lore_tokens, platinum, electrum, gold, silver, copper, gacha_rolls FROM char_data ORDER BY char_name """)
