@@ -1112,8 +1112,10 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
   # dump function
   @commands.command( name = "dump", pass_context = True )
-  async def dump( self, ctx, arg = None ):
+  async def dump( self, ctx, *args ):
 
+    arg = args[0]
+    
     if arg is None:
       # DUMP_ARG_LENGTH_ERROR
       await ctx.send( "returned ")
