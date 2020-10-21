@@ -1,3 +1,5 @@
+import csv
+from datetime import datetime
 import discord
 from discord.ext import commands
 import disputils
@@ -5,6 +7,7 @@ import enum
 import json
 from jsonmerge import merge
 import math
+import os
 from random import randint
 import sqlite3
 
@@ -1107,7 +1110,48 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # End of currex function
     return
 
+  # dump function
+  @commands.command( name = "dump", pass_context = True )
+  async def dump( self, ctx, arg):
 
+    if arg is None:
+      # DUMP_ARG_LENGTH_ERROR
+      return
+    elif arg != "user_chars" or arg != "char_data":
+      # DUMP_INVALID_DB_ERROR
+      return
+
+    if arg == "user_chars":
+      path = USER_CHARS_DATA_PATH
+      sql = ("""SELECT user_id, active_char, char_one_id, char_two_id, char_three_id FROM user_chars ORDER BY user_id """)
+    elif arg == "char_data"
+      path = CHAR_DATA_PATH
+      sql = ("""SELECT char_id, user_id, drive_link, char_name, action_points, downtime, lore_tokens, platinum, electrum, gold, silver, copper, gacha_rolls FROM char_data ORDER BY char_name """)
+
+    db = sqlite3.connect( path )
+    cursor = db.cursor()
+    cursor.execute( sql )
+    result = cursor.fetchall()
+
+    headers = [i[0] for i in cursor.description]
+
+    date = datetime.now()
+    dt_str = now.strftime("%d_%m_%y_%h_%m_%s")
+
+    csvFile = csv.writer( open( f"data/{arg}_{dt_str}.csv", WRITE_TAG, newline=''), delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL, escapechar='\\')
+
+    csvFile.writerow( headers )
+    csvFile.writerows( results )
+
+    print( 'data export successful')
+
+    await ctx.send( "Data Export Successful!")
+
+    cursor.close()
+    db.close()
+
+    return
+    
   
   ## Gacharoll Functions
 
