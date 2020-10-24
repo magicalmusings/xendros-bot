@@ -409,6 +409,381 @@
             "name":"Winged Boots",
             "attn":"YES",
             "desc":"https://dnd5e.info/magic-items/item/winged-boots/"
+        },
+        "83": {
+            "name":"Rod of the Pact Keeper +1",
+            "attn":"YES (by a warlock)",
+            "desc":"https://5e.tools/items.html#%2b1%20rod%20of%20the%20pact%20keeper_dmg"
+        },
+        "84": {
+            "name":"Alchemy Jug",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#alchemy%20jug_dmg"
+        },
+        "85": {
+            "name":"Amulet of the Drunkard",
+            "attn":"NO",
+            "desc":"This amulet smells of old, ale-stained wood. While wearing it, you can regain 4d4 + 4 hit points when you drink a pint of beer, ale, mead, or wine. Once the amulet has restored hit points, it can't do so again until the next dawn."
+        },
+        "86": {
+            "name":"Azorius Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#azorius%20guild%20signet_ggr"
+        },
+        "87": {
+            "name":"Balance of Harmony",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#balance%20of%20harmony_tftyp"
+        },
+        "88": {
+            "name":"Balloon Pack",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#balloon%20pack_pota"
+        },
+        "89": {
+            "name":"Blood Spear",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#blood%20spear_cos"
+        },
+        "90": {
+            "name":"Boros Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#boros%20guild%20signet_ggr"
+        },
+        "91": {
+            "name":"Bottled Breath",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#bottled%20breath_pota"
+        },
+        "92": {
+            "name":"Brooch of Living Essence",
+            "attn":"YES",
+            "desc":"While wearing this nondescript brooch, spells and anything else that would detect or reveal your creature type treat you as humanoid, and those that would reveal your alignment treat it as neutral."
+        },
+        "93": {
+            "name":"Charred Wand of Magic Missiles",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#charred%20wand%20of%20magic%20missiles_wdh"
+        },
+        "94": {
+            "name":"Circlet of Human Perfection",
+            "attn":"YES (by a humanoid)",
+            "desc":"The Circlet of Human Perfection transforms its attuned wearer into an attractive human of average height and weight. The circlet chooses the physical characteristics of the form, such as age, gender, skin color, hair color, and voice. Except for size, the wearer's statistics and racial traits don't change, nor do items worn or carried by the wearer. Removing the circlet ends the effect."
+        },
+        "95": {
+            "name":"Coiling Grasp Tattoo",
+            "attn":"YES (by visiting a tattoo artist)",
+            "desc":"https://5e.tools/items.html#coiling%20grasp%20tattoo_tce"
+        },
+        "96": {
+            "name":"Dimir Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#dimir%20guild%20signet_ggr"
+        },
+        "97": {
+            "name":"Dust of Deliciousness",
+            "attn":"NO",
+            "desc":"This reddish brown dust can be sprinkled over any edible substance to greatly improve the flavor. The dust also dulls the eater's senses: anyone eating food treated with this dust has disadvantage on Wisdom ability checks and Wisdom saving throws for 1 hour. There is enough dust to flavor six servings."
+        },
+        "98": {
+            "name":"Earworm",
+            "attn":"YES (see entry)",
+            "desc":"https://5e.tools/items.html#earworm_erlw"
+        },
+        "99": {
+            "name":"Elder Cartographer's Glossography",
+            "attn":"NO",
+            "desc":"This small magical tome grants advantage on Intelligence or Wisdom checks related to geographical features or locations."
+        },
+        "100": {
+            "name":"Finder's Goggles",
+            "attn":"YES (requires attunement by a creature with a dragonmark)",
+            "desc":"https://5e.tools/items.html#finder's%20goggles_erlw"
+        },
+        "101": {
+            "name":"Goggles of Object Reading",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#goggles%20of%20object%20reading_egw"
+        },
+        "102": {
+            "name":"Golgari Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#golgari%20guild%20signet_ggr"
+        },
+        "103": {
+            "name":"Gruul Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#gruul%20guild%20signet_ggr"
+        },
+        "104": {
+            "name":"Hellfire Weapon",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#hellfire%20weapon_bgdia"
+        },
+        "105": {
+            "name":"Helm of Underwater Action",
+            "attn":"YES",
+            "desc":"While wearing this brass helmet, you can breathe underwater, you gain darkvision with a range of 60 feet, and you gain a swimming speed of 30 feet."
+        },
+        "106": {
+            "name":"Infernal Puzzle Box",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#infernal%20puzzle%20box_bgdia"
+        },
+        "107": {
+            "name":"Insignia of Claws",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#insignia%20of%20claws_hotdq"
+        },
+        "108": {
+            "name":"Instrument of the Bards (Doss Lute)",
+            "attn":"YES (by a bard)",
+            "desc":"https://5e.tools/items.html#instrument%20of%20the%20bards%2c%20doss%20lute_dmg"
+        },
+        "109": {
+            "name":"Instrument of the Bards (Fochlucan Bandore)",
+            "attn":"YES (by a bard)",
+            "desc":"https://5e.tools/items.html#instrument%20of%20the%20bards%2c%20fochlucan%20bandore_dmg"
+        },
+        "110": {
+            "name":"Instrument of the Bards (Mach-Fuirmidh Cittern)",
+            "attn":"YES (by a bard)",
+            "desc":"https://5e.tools/items.html#instrument%20of%20the%20bards%2c%20mac-fuirmidh%20cittern_dmg"
+        },
+        "111": {
+            "name":"Izzet Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#izzet%20guild%20signet_ggr"
+        },
+        "112": {
+            "name":"Lightbringer",
+            "attn":"NO",
+            "desc":"This +1 mace was made for a cleric of Lathander, the god of dawn. The head of the mace is shaped like a sunburst and made of solid brass. Named Lightbringer, this weapon glows as bright as a torch when its wielder commands. While glowing, the mace deals an extra 1d6 radiant damage to undead creatures."
+        },
+        "113": {
+            "name":"Living Gloves",
+            "attn":"YES (see description)",
+            "desc":"https://5e.tools/items.html#living%20gloves_erlw"
+        },
+        "114": {
+            "name":"Mask of the Beast",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#mask%20of%20the%20beast_toa"
+        },
+        "115": {
+            "name":"Mind Carapace Armor",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#mind%20carapace%20armor_vgm"
+        },
+        "116": {
+            "name":"Mizzium Apparatus",
+            "attn":"YES (by a sorcerer, warlock, or wizard)",
+            "desc":"https://5e.tools/items.html#mizzium%20apparatus_ggr"
+        },
+        "117": {
+            "name":"Night Caller",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#night%20caller_tftyp"
+        },
+        "118": {
+            "name":"Orc Stone",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#orc%20stone_idrotf"
+        },
+        "119": {
+            "name":"Orzhov Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#orzhov%20guild%20signet_ggr"
+        },
+        "120": {
+            "name":"Paper Bird",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#paper%20bird_wdh"
+        },
+        "121": {
+            "name":"Propeller Helm",
+            "attn":"YES (by a small humanoid)",
+            "desc":"While worn, the helm allows its wearer to use an action to cast the levitate spell, requiring no components. The helm's propeller spins and whirs loudly until the spell ends. Each time the spell ends, there is a 50 percent chance that the helm loses its magic and becomes nonmagical."
+        },
+        "122": {
+            "name":"Psi Crystal",
+            "attn":"YES (by a creatuer of intelligence greater than 3)",
+            "desc":"https://5e.tools/items.html#psi%20crystal_idrotf"
+        },
+        "123": {
+            "name":"Pyroconverger",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#pyroconverger_ggr"
+        },
+        "124": {
+            "name":"Rakdos Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#rakdos%20guild%20signet_ggr"
+        },
+        "125": {
+            "name":"Rakdos Keyrune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#rakdos%20keyrune_ggr"
+        },
+        "126": {
+            "name":"Reszur",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#reszur_pota"
+        },
+        "127": {
+            "name":"Ring of Obscuring",
+            "attn":"YES",
+            "desc":"This band of iron resembles a skull and is cold to the touch. It has 3 charges and regains 1d3 expended charges daily at dawn. As an action while wearing the ring, you can expend 1 of its charges to cast the fog cloud spell from it, with the following changes: the cloud is centered on you when it first appears, and the spell lasts for 1 minute (no concentration required)."
+        },
+        "128": {
+            "name":"Ring of Truth Telling",
+            "attn":"YES",
+            "desc":"While wearing this ring, you have advantage on Wisdom (Insight) checks to determine whether someone is lying to you."
+        },
+        "129": {
+            "name":"Robe of Serpents",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#robe%20of%20serpents_skt"
+        },
+        "130": {
+            "name":"Rod of Retribution",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#rod%20of%20retribution_egw"
+        },
+        "131": {
+            "name":"Seeker Dart",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#seeker%20dart_pota"
+        },
+        "132": {
+            "name":"Selesnya Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#selesnya%20guild%20signet_ggr"
+        },
+        "133": {
+            "name":"Sending Stone (x2)",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#sending%20stone_ai"
+        },
+        "134": {
+            "name":"Sentinel Shield",
+            "attn":"NO",
+            "desc":"While holding this shield, you have advantage on initiative rolls and Wisdom (Perception) checks. The shield is emblazoned with a symbol of an eye."
+        },
+        "135": {
+            "name":"Shatterspike",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#shatterspike_tftyp"
+        },
+        "136": {
+            "name":"Simic Signet",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#simic%20guild%20signet_ggr"
+        },
+        "137": {
+            "name":"Simic Keyrune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#simic%20keyrune_ggr"
+        },
+        "138": {
+            "name":"Skyblinder Staff",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#skyblinder%20staff_ggr"
+        },
+        "139": {
+            "name":"Smoke Powder",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#smokepowder_wdh"
+        },
+        "140": {
+            "name":"Spell Gem (Lapis Lazuli)",
+            "attn":"MAYBE",
+            "desc":"https://5e.tools/items.html#spell%20gem%20(lapis%20lazuli)_oota"
+        },
+        "141": {
+            "name":"Spell Gem (Obsidian)",
+            "attn":"MAYBE",
+            "desc":"https://5e.tools/items.html#spell%20gem%20(obsidian)_oota"
+        },
+        "142": {
+            "name":"Spies' Murmur",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#spies'%20murmur_ggr"
+        },
+        "143": {
+            "name":"Storm Boomerang",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#storm%20boomerang_pota"
+        },
+        "144": {
+            "name":"Sword of Vengeance",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#sword%20of%20vengeance_dmg"
+        },
+        "145": {
+            "name":"Travel Alchemical Kit",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#travel%20alchemical%20kit_ai"
+        },
+        "146": {
+            "name":"Weapon of Warning",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#weapon%20of%20warning_dmg"
+        },
+        "147": {
+            "name":"Wingwear",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#wingwear_pota"
+        },
+        "148": {
+            "name":"Winter's Dark Bite",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#winter's%20dark%20bite_hftt"
+        },
+        "149": {
+            "name":"Bag of Bounty",
+            "attn":"NO",
+            "desc":"https://5e.tools/items/bag-of-bounty-uawge.html"
+        },
+        "150": {
+            "name":"Barrier Tattoo",
+            "attn":"YES (by visiting a tattoo artist)",
+            "desc":"https://www.dndbeyond.com/magic-items/barrier-tattoo-ua"
+        },
+        "151": {
+            "name":"Blood of the Lycanthrope",
+            "attn":"NO",
+            "desc":"https://5e.tools/items/blood-of-the-lycanthrope-imr.html"
+        },
+        "152": {
+            "name":"Crown of the Forest",
+            "attn":"NO",
+            "desc":"https://5e.tools/items/crown-of-the-forest-imr.html"
+        },
+        "153": {
+            "name":"Eldritch Claw Tattoo",
+            "attn":"YES (by visiting a tattoo artist)",
+            "desc":"https://www.dndbeyond.com/magic-items/eldritch-claw-tattoo-ua"
+        },
+        "154": {
+            "name":"Gloves of Thievery",
+            "attn":"NO",
+            "desc":"https://5e.tools/items/gloves-of-thievery-dmg.html"
+        },
+        "155": {
+            "name":"Hew",
+            "attn":"NO",
+            "desc":"https://5e.tools/items/hew-lmop.html"
+        },
+        "156": {
+            "name":"Rings of Shared Suffering (x2)",
+            "attn":"YES",
+            "desc":"These rings come in linked pairs. You can use a bonus action to form a link to the creature attuned to the other ring; from then on, whenever that creature suffers damage, they only suffer half of that damage and you take the rest. This effect continues until you end it as a bonus action or until you or the other creature removes their ring. This effect isn't limited by range. A creature cannot be attuned to more than one ring of shared suffering."
+        },
+        "157": {
+            "name":"Spellwrought Tattoo",
+            "attn":"YES (by visiting a tattoo artist)",
+            "desc":"https://www.dndbeyond.com/magic-items/spellwrought-tattoo-ua"
         }
     }
 }

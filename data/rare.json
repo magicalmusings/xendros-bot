@@ -524,6 +524,57 @@
             "name":"Wings of Flying",
             "attn":"YES",
             "desc":"While wearing this cloak, you can use an action to speak its command word. This turns the cloak into a pair of bat wings or bird wings on your back for 1 hour or until you repeat the command word as an action. The wings give you a flying speed of 60 feet. When they disappear, you can’t use them again for 1d12 hours."
-        }
+        },
+        "106": {
+            "name":"Acheron Blade",
+            "attn":"YES",
+            "desc":"https://5e.tools/items/acheron-blade-egw.html"
+        },
+        "107": {
+            "name":"Barrier Tattoo",
+            "attn":"YES (by visiting a tattoo artist)",
+            "desc":"https://www.dndbeyond.com/magic-items/barrier-tattoo-ua"
+        },
+        "108": {
+            "name":"Banner fo the Krig Rune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items/banner-of-the-krig-rune-skt.html"
+        },
+        "109": {
+            "name":"Blod Stone",
+            "attn":"YES",
+            "desc":"https://5e.tools/items/blod-stone-skt.html"
+        },
+        "110": {
+            "name":"Bonecounter",
+            "attn":"NO",
+            "desc":"https://5e.tools/items/bonecounter-sdw.html"
+        },
+        "111": {
+            "name":"Boots of Speed",
+            "attn":"YES",
+            "desc":"https://www.dndbeyond.com/magic-items/boots-of-speed"
+        },
+        "112": {
+            "name":"Bracers of Flying Daggers",
+            "attn":"YES",
+            "desc":"https://5e.tools/items/bracer-of-flying-daggers-wdh.html"
+        },
+        "113": {
+            "name":"Bridle of Capturing",
+            "attn":"NO",
+            "desc":"https://5e.tools/items/bridle-of-capturing-imr.html"
+        },
+        "114": {
+            "name":"Butchers Bib",
+            "attn":"YES",
+            "desc":"https://5e.tools/items/butchers-bib-egw.html"
+        },
+        "115": {
+            "name":"Cauldron of Plenty",
+            "attn":"NO",
+            "desc":"https://5e.tools/items/cauldron-of-plenty-idrotf.html"
+        },
+        "The Rest": "https://www.dndbeyond.com/magic-items?filter-rarity=3&filter-search=&filter-type=0&page=2"
     }
 }
