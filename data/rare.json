@@ -575,6 +575,400 @@
             "attn":"NO",
             "desc":"https://5e.tools/items/cauldron-of-plenty-idrotf.html"
         },
-        "The Rest": "https://www.dndbeyond.com/magic-items?filter-rarity=3&filter-search=&filter-type=0&page=2"
+        "116": {
+            "name":"Charm of Plant Command",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#charm%20of%20plant%20command_gos"
+        },
+        "117": {
+            "name":"Claw of the Wyrm Rune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#claw%20of%20the%20wyrm%20rune_skt"
+        },
+        "118": {
+            "name":"Claws of the Umber Hulk",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#claws%20of%20the%20umber%20hulk_pota"
+        },
+        "119": {
+            "name":"Concertina",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#concertina_rmbre"
+        },
+        "120": {
+            "name":"Corpse Slayer",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#corpse%20slayer_egw"
+        },
+        "121": {
+            "name":"Dagger of Blindsight",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#dagger%20of%20blindsight_wdmm"
+        },
+        "122": {
+            "name":"Battering Shield",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#battering%20shield_egw"
+        },
+        "123": {
+            "name":"Dodecahedron of Doom",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#dodecahedron%20of%20doom_wdmm"
+        },
+        "124": {
+            "name":"Dragonguard",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#dragonguard_lmop"
+        },
+        "125": {
+            "name":"Dragontooth Dagger",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#dragontooth%20dagger_rot"
+        },
+        "126": {
+            "name":"Eagle Whistle",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#eagle%20whistle_tftyp"
+        },
+        "127": {
+            "name":"Failed Experiment Wand",
+            "attn":"YES (by a spellcaster)",
+            "desc":"https://5e.tools/items.html#failed%20experiment%20wand_ai"
+        },
+        "128": {
+            "name":"Feather of Diatryma Summoning",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#feather%20of%20diatryma%20summoning_wdh"
+        },
+        "129": {
+            "name":"Galder's Bubble Pipe",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#galder's%20bubble%20pipe_llk"
+        },
+        "130": {
+            "name":"Gambler's Blade",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#gambler's%20blade_llk"
+        },
+        "131": {
+            "name":"Gauntlets of Flaming Fury",
+            "attn":"YES",
+            "desc":"While you wear both of these steel gauntlets, any non- magical weapon you grasp with either gauntlet is treated as a magic weapon. As a bonus action, you can use the gauntlets to cause magical flames to envelop one or two melee weapons in your grasp. Each flaming weapon deals an extra 1d6 fire damage on a hit. The flames last until you sheath or let go of either weapon. Once used, this property can't be used again until the next dawn."
+        },
+        "132": {
+            "name":"Gavel of the Venn Rune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#gavel%20of%20the%20venn%20rune_skt"
+        },
+        "133": {
+            "name":"Ghost Lantern",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#ghost%20lantern_toa"
+        },
+        "134": {
+            "name":"Ghost Step Tattoo",
+            "attn":"YES (by visiting a tattoo artist)",
+            "desc":"https://5e.tools/items.html#ghost%20step%20tattoo_ua2020spellsandmagictattoos"
+        },
+        "135": {
+            "name":"Gruul Keyrune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#gruul%20keyrune_ggr"
+        },
+        "136": {
+            "name":"Gulthias Staff",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#gulthias%20staff_cos"
+        },
+        "137": {
+            "name":"Hell Hound Cloak",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#hell%20hound%20cloak_tftyp"
+        },
+        "138": {
+            "name":"Helm of the Gods",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#helm%20of%20the%20gods_mot"
+        },
+        "139": {
+            "name":"Hook of Fisher's Delight",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#hook%20of%20fisher's%20delight_idrotf"
+        },
+        "140": {
+            "name":"Horn of the Endless Maze",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#horn%20of%20the%20endless%20maze_wdmm"
+        },
+        "141": {
+            "name":"Ioun Stone (History)",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#ioun%20stone%2c%20historical%20knowledge_llk"
+        },
+        "142": {
+            "name":"Ioun Stone (Language)",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#ioun%20stone%2c%20language%20knowledge_llk"
+        },
+        "143": {
+            "name":"Ioun Stone (Nature)",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#ioun%20stone%2c%20natural%20knowledge_llk"
+        },
+        "144": {
+            "name":"Ioun Stone (Religion)",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#ioun%20stone%2c%20religious%20knowledge_llk"
+        },
+        "145": {
+            "name":"Ioun Stone (Self-Preservation)",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#ioun%20stone%2c%20self-preservation_llk"
+        },
+        "146": {
+            "name":"Ioun Stone (Intellect)",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#ioun%20stone%2c%20supreme%20intellect_llk"
+        },
+        "147": {
+            "name":"Izzet Keyrune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#izzet%20keyrune_ggr"
+        },
+        "148": {
+            "name":"Knave's Eyepatch",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#knave's%20eye%20patch_wdh"
+        },
+        "149": {
+            "name":"Leather Golem Armor",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#leather%20golem%20armor_llk"
+        },
+        "150": {
+            "name":"Lifewell Tattoo",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#lifewell%20tattoo_ua2020spellsandmagictattoos"
+        },
+        "151": {
+            "name":"Mind Blade",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#mind%20blade_vgm"
+        },
+        "152": {
+            "name":"Mind Lash",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#mind%20lash_vgm"
+        },
+        "153": {
+            "name":"Mirror of the Past",
+            "attn":"NO",
+            "desc":"The holder of this platinum hand mirror can learn something about the history of a specific object or creature by taking an action to gaze into the mirror and think of the target. Instead of the holder's reflection, the mirror presents scenes from the target's past. Information conveyed is accurate, but it is random and cryptic, and presented in no particular order. Once it is activated, the mirror gives its information for 1 minute or less, then returns to normal. It can't be used again until the next dawn."
+        },
+        "154": {
+            "name":"Mizzium Armor",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#mizzium%20armor_ggr"
+        },
+        "155": {
+            "name":"Mizzium Mortar",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#mizzium%20mortar_ggr"
+        },
+        "156": {
+            "name":"Molten Bronze Skin",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#molten%20bronze%20skin_mot"
+        },
+        "157": {
+            "name":"Needle of Mending",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#needle%20of%20mending_egw"
+        },
+        "158": {
+            "name":"Opal of the Ild Rune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#opal%20of%20the%20ild%20rune_skt"
+        },
+        "159": {
+            "name":"Orb of the Stein Rune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#orb%20of%20the%20stein%20rune_skt"
+        },
+        "160": {
+            "name":"Silver Dragon Shield",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#order%20of%20the%20silver%20dragon%20%2b2%20shield_cos"
+        },
+        "161": {
+            "name":"Orzhov Keyrune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#orzhov%20keyrune_ggr"
+        },
+        "162": {
+            "name":"Pariah's Shield",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#pariah's%20shield_ggr"
+        },
+        "163": {
+            "name":"Pennant of the Vind Rune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#pennant%20of%20the%20vind%20rune_uaprestigeclassesrunmagic"
+        },
+        "164": {
+            "name":"Piercer",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#piercer_ai"
+        },
+        "165": {
+            "name":"Piwafwi of Fire Resistance",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#piwafwi%20of%20fire%20resistance_oota"
+        },
+        "166": {
+            "name":"Potion of Aqueous Form",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#potion%20of%20aqueous%20form_mot"
+        },
+        "167": {
+            "name":"Potion of Maximum Spell",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#potion%20of%20maximum%20power_egw"
+        },
+        "168": {
+            "name":"Potion of Mind Control (beast)",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#potion%20of%20mind%20control%20(beast)_tftyp"
+        },
+        "169": {
+            "name":"Potion of Mind Control (humanoid)",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#potion%20of%20mind%20control%20(humanoid)_tftyp"
+        },
+        "170": {
+            "name":"Professor Orb",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#professor%20orb_wdmm"
+        },
+        "171": {
+            "name":"Ring of Temporal Salvation",
+            "attn":"YES",
+            "desc":"If you die while wearing this gray crystal ring, you vanish and reappear in an unoccupied space within 5 feet of the space you left (or the nearest unoccupied space). You have a number of hit points equal to 3d6 + your Constitution modifier. If your hit point maximum is lower than the number of hit points you regain, your hit point maximum rises to a similar amount. If you have any levels of exhaustion, reduce your level of exhaustion by 1. Once the ring is used, it turns to dust and is destroyed."
+        },
+        "172": {
+            "name":"Robe of Summer",
+            "attn":"YES",
+            "desc":"This elegant garment is made from fine cloth in hues of red, orange, and gold. While you wear the robe, you have resistance to cold damage. In addition, you are comfortable as if the temperature were that of a balmy day, so you suffer no ill effects from the weather's temperature extremes."
+        },
+        "173": {
+            "name":"Rod of the Vonindod",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#rod%20of%20the%20vonindod_skt"
+        },
+        "174": {
+            "name":"Saint Markovia's Thighbone",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#saint%20markovia's%20thighbone_cos"
+        },
+        "175": {
+            "name":"Scorpion Armor",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#scorpion%20armor_toa"
+        },
+        "176": {
+            "name":"Selesnya Keyrune",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#selesnya%20keyrune_ggr"
+        },
+        "177": {
+            "name":"Shield Guardian Amulet",
+            "attn":"YES (by a humanoid)",
+            "desc":"https://5e.tools/items.html#shield%20guardian%20amulet_idrotf"
+        },
+        "178": {
+            "name":"Shield of Far Sight",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#shield%20of%20far%20sight_vgm"
+        },
+        "179": {
+            "name":"Siren Song Lyre",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#siren%20song%20lyre_mot"
+        },
+        "180": {
+            "name":"Spell Stone (Bloodstone)",
+            "attn":"MAYBE",
+            "desc":"https://5e.tools/items.html#spell%20gem%20(bloodstone)_oota"
+        },
+        "181": {
+            "name":"Spell Stone (Quartz)",
+            "attn":"MAYBE",
+            "desc":"https://5e.tools/items.html#spell%20gem%20(quartz)_oota"
+        },
+        "182": {
+            "name":"Spellwrought Tattoo",
+            "attn":"YES (by visiting a tattoo artist)",
+            "desc":"https://5e.tools/items.html#spellwrought%20tattoo%20(4th%20level)_ua2020spellsandmagictattoos"
+        },
+        "183": {
+            "name":"Spider Staff",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#spider%20staff_lmop"
+        },
+        "184": {
+            "name":"Staff of Defense",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#staff%20of%20defense_lmop"
+        },
+        "185": {
+            "name":"Staff of the Ivory Claw",
+            "attn":"YES (by a spellcaster)",
+            "desc":"https://5e.tools/items.html#staff%20of%20the%20ivory%20claw_egw"
+        },
+        "186": {
+            "name":"Stonespeaker Crystal",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#stonespeaker%20crystal_oota"
+        },
+        "187": {
+            "name":"Sunforger",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#sunforger_ggr"
+        },
+        "188": {
+            "name":"Two-Birds Sling",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#two-birds%20sling_mot"
+        },
+        "189": {
+            "name":"Ventilating Lungs",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#ventilating%20lungs_erlw"
+        },
+        "190": {
+            "name":"Vicious Weapon +1",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#vicious%20%2b1%20weapon_ai"
+        },
+        "191": {
+            "name":"Wand of Viscid Globs",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#wand%20of%20viscid%20globs_oota"
+        },
+        "192": {
+            "name":"Wand of Winter",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#wand%20of%20winter_hotdq"
+        },
+        "193": {
+            "name":"Weapon of Certain Death",
+            "attn":"NO",
+            "desc":"https://5e.tools/items.html#weapon%20of%20certain%20death_egw"
+        },
+        "194": {
+            "name":"Weird Tank",
+            "attn":"YES",
+            "desc":"https://5e.tools/items.html#weird%20tank_pota"
+        }
     }
 }
