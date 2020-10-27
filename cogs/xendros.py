@@ -1,15 +1,18 @@
 import csv
-from datetime import datetime
-import discord
-from discord.ext import commands
-import disputils
 import enum
 import json
-from jsonmerge import merge
 import math
 import os
-from random import randint
 import sqlite3
+from datetime import datetime
+from random import randint
+
+# NOTE: pylint error disables are used solely for local development, when ran in Repl.it, Kallista will have these modules available. 
+
+import discord # pylint: disable=import-error
+import disputils # pylint: disable=import-error
+from discord.ext import commands # pylint: disable=import-error
+from jsonmerge import merge # pylint: disable=import-error
 
 APPEND_TAG = "a"
 CHAR_DATA_PATH = "data/char_data.sqlite"
@@ -392,8 +395,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     if arg is None:
       return
 
-    message = ctx.message 
-
     db = sqlite3.connect( USER_CHARS_DATA_PATH )
     cursor = db.cursor()
     cursor.execute( f"""SELECT char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{int(arg)}' """)
@@ -580,7 +581,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       db.close()
       return
 
-    user_id = int( result[0] )
     char_name = str( result[1] )
     drive_link = str( result[2] )
 
@@ -1396,7 +1396,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.is_owner()
   async def rollUncommonAdmin( self, ctx, arg = None ):
 
-    message = ctx.message
     total_items = len(UNCOMMON_ITEMS['uncommon'])
 
     # Get Random Number 
@@ -1435,7 +1434,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.is_owner()
   async def rollRareAdmin( self, ctx, arg = None ):
 
-    message = ctx.message
     total_items = len(RARE_ITEMS['rare'])
 
     # Get Random Number 
