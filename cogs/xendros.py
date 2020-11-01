@@ -206,11 +206,11 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       })
 
     # Get the ids of the characters
-    char_one = CHAR_DATA[message.author.id]["1"]
-    char_two = CHAR_DATA[message.author.id]["2"]
-    char_three = CHAR_DATA[message.author.id]["3"]
-    char_four = CHAR_DATA[message.author.id]["4"]
-    char_five = CHAR_DATA[message.author.id]["5"]
+    char_one = CHAR_DATA[message.author.id][1]
+    char_two = CHAR_DATA[message.author.id][2]
+    char_three = CHAR_DATA[message.author.id][3]
+    char_four = CHAR_DATA[message.author.id][4]
+    char_five = CHAR_DATA[message.author.id][5]
 
     # ERROR CASE: If three characters are already made 
     if len(char_one) != 0 and len(char_two) != 0 and len(char_three) != 0 and len(char_four) != 0 and len(char_five) != 0:
@@ -258,6 +258,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       "silver":"0",
       "copper":"0"
     })
+
+    with open( CHAR_DATA_PATH, WRITE_TAG ) as write_file:
+      json.dump( CHAR_DATA )
 
     await ctx.send( f"You've been added to my list, {char_name}! I've given you 10 gold as a welcome gift. Hopefully ours will be an ongoing arrangement, love.")
 
