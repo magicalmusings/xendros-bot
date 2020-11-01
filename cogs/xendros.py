@@ -107,6 +107,18 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
   ## Main Functions 
 
+  async def getCharData( self, ctx ):
+
+    with open( CHAR_DATA_PATH , READ_TAG ) as read_file:
+
+      self.CHAR_DATA = json.load( read_file )
+
+  async def updateCharData( self, ctx ):
+
+    with open( CHAR_DATA_PATH, WRITE_TAG ) as write_file:
+
+      json.dump( self.CHAR_DATA, write_file, indent = 4)
+
   async def displayErrorMessage( self, ctx, error_code ):
 
     error_messages = {
@@ -173,8 +185,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     
     # Grab current information from char_data
 
-    with open( CHAR_DATA_PATH, READ_TAG ) as read_file:
-      self.CHAR_DATA = json.load( read_file )
+    await self.getCharData( ctx )
 
     # ALT CASE: If this is the users first time using Kallista
     if not message.author.id in self.CHAR_DATA:
@@ -250,8 +261,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     active_char["silver"] = "0"
     active_char["copper"] = "0"
 
-    with open( CHAR_DATA_PATH, WRITE_TAG ) as write_file:
-      json.dump( self.CHAR_DATA , write_file, indent = 4)
+    await self.updateCharData( ctx )
 
     await ctx.send( f"You've been added to my list, {char_name}! I've given you 10 gold as a welcome gift. Hopefully ours will be an ongoing arrangement, love.")
 
