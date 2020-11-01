@@ -14,7 +14,6 @@ import discord # pylint: disable=import-error
 import disputils # pylint: disable=import-error
 from discord.ext import commands # pylint: disable=import-error
 from jsonmerge import merge # pylint: disable=import-error
-from nested_lookup import nested_lookup # pylint: disable=import-error
 
 APPEND_TAG = "a"
 CHAR_DATA_PATH = "data/char_data.json"
