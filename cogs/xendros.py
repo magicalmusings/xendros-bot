@@ -619,7 +619,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If result is null 
     try:
       print( args[0] )
-      char_data = self.CHAR_DATA.keys()[list(self.CHAR_DATA.values()).index( args[0]) ]
+      char_data = [char for char, name in self.CHAR_DATA.iteritems() if name == args[0]]
       print( char_data )
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
