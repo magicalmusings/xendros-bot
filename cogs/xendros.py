@@ -621,7 +621,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       return 
     
-    current_amt = int( char_data[currency ] )
+    current_amt = int( char_data.get(currency) )
 
     char_data[currency] = str( current_amt + int( args[2] ) )
 
