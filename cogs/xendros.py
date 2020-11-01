@@ -193,7 +193,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await ctx.send( "Seems like it's your first time here, love. Allow me to add you to my registry..." )
 
       self.CHAR_DATA[message.author.id] = {}
-      user_data = self.CHAR_DATA[message.author.id]
+      user_data = self.CHAR_DATA[str(message.author.id)]
       user_data["user_name"] = f"{message.author.name}"
       user_data["active_char"] = "1"
       user_data["1"] = {}
@@ -202,7 +202,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       user_data["4"] = {}
       user_data["5"] = {}
 
-    user_data = self.CHAR_DATA[message.author.id]
+    user_data = self.CHAR_DATA[str(message.author.id)]
     print( user_data )
 
     # Get the ids of the characters
@@ -224,31 +224,31 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     if len(char_one) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[message.author.id]["active_char"] = "1"
+      self.CHAR_DATA[str(message.author.id)]["active_char"] = "1"
 
     if len(char_two) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[message.author.id]["active_char"] = "2"
+      self.CHAR_DATA[str(message.author.id)]["active_char"] = "2"
 
     if len(char_three) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[message.author.id]["active_char"] = "3"
+      self.CHAR_DATA[str(message.author.id)]["active_char"] = "3"
 
     if len(char_four) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[message.author.id]["active_char"] = "4"
+      self.CHAR_DATA[str(message.author.id)]["active_char"] = "4"
 
     if len(char_five) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[message.author.id]["active_char"] = "5"
+      self.CHAR_DATA[str(message.author.id)]["active_char"] = "5"
 
     # Initialize row for user in char_data table
-    active_char_slot = self.CHAR_DATA[message.author.id]["active_char"]
+    active_char_slot = self.CHAR_DATA[str(message.author.id)]["active_char"]
 
     char_name = args[0]
     drive_link = args[1]
 
-    active_char = self.CHAR_DATA[message.author.id][active_char_slot]
+    active_char = self.CHAR_DATA[str(message.author.id)][active_char_slot]
     active_char["char_name"] = f"{char_name}"
     active_char["drive_link"] = f"{drive_link}"
     active_char["gacha_rolls"] = "0"
