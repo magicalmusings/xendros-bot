@@ -302,6 +302,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     await ctx.send( f"The character in Slot { char_slot } has been deleted." )
 
+    await self.updateCharData( ctx )
+
     # Check if no more characters exist for this character
     if len( user_data["1"] ) == 0 and len( user_data["2"] ) == 0 and len( user_data["3"] ) == 0 and len( user_data["4"] ) == 0 and len( user_data["5"] ) == 0:
 
@@ -310,8 +312,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await self.erase( ctx, str(message.author.id) )
 
     # End of delete function
-
-    await self.updateCharData( ctx )
 
     return
 
