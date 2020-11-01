@@ -251,7 +251,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     active_char["copper"] = "0"
 
     with open( CHAR_DATA_PATH, WRITE_TAG ) as write_file:
-      json.dump( self.CHAR_DATA , write_file )
+      json.dump( self.CHAR_DATA , write_file, indent = 4)
 
     await ctx.send( f"You've been added to my list, {char_name}! I've given you 10 gold as a welcome gift. Hopefully ours will be an ongoing arrangement, love.")
 
