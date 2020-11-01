@@ -666,6 +666,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.is_owner()
   async def withdraw( self, ctx, *args ):
 
+    await self.bot.wait_until_ready()
+
     # ERROR CASE: If # of arguments is not correct
     if len( args ) < 3:
       await self.displayErrorMessage( ctx, ERROR_CODES.WITHDRAW_ARGS_LENGTH_ERROR )
@@ -674,45 +676,36 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     currency = CURRENCY_SWITCH.get( args[1], "NULL")
 
     if currency == "NULL":
-
       await self.displayErrorMessage( ctx, ERROR_CODES.WITHDRAW_CURRENCY_ERROR )
       return
 
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT { currency } FROM char_data WHERE char_id = '{args[0]}' """)
-    result = cursor.fetchone()
+    await self.getCharData( ctx )
 
-    if result is None:
+    try:
+      print( args[0] )
+      char_data = await self.getCharFromName( args[0] )
+      print( char_data )
+    except:
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
+      return 
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
-      return
+    current_amt = int( char_data.get( currency ) )
 
-    current_amt = int( result[0])
+    calc = current_amt - int( args[2] )
+    if calc < 0:
+      calc = 0
 
-    sql = ( f"""UPDATE char_data SET {currency} = ? WHERE char_id = ?""")
-    if current_amt - int( args[2] ) < 0:
-      new_amt = 0
-    else:
-      new_amt = current_amt - int( args[2] )
-    values = ( new_amt, int(args[0]) )
-    cursor.execute( sql, values )
-    db.commit()
+    char_data[currency] = str( calc )
 
-    cursor.execute( f"""SELECT char_Name, {currency} FROM char_data WHERE char_id = '{args[0]}'""" )
-    result = cursor.fetchone()
-
-    char_name = str(result[0])
-    new_amt = str(result[1])
+    char_name = str( char_data["char_name"] )
+    new_amt = str( char_data[currency] )
 
     await ctx.send( f"I've withdrawn { args[2] } { args[1].upper() } from {char_name}'s account. Their new balance is {new_amt} { args[1].upper() } !")
 
-    cursor.close() 
-    db.close() 
+    await self.updateCharData( ctx )
 
     # End of withdraw() function
+    return
 
   # setbal function
   @commands.command( name = "setbal", pass_context = True , aliases = ['sb'])
