@@ -620,6 +620,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       return 
+
+    print( char_data )
     
     current_amt = int( char_data.get(currency) )
 
