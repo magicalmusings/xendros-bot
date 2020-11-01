@@ -188,21 +188,11 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       CHAR_DATA[message.author.id].append({
         "user_name": f"{message.author.name}",
         "active_char": "1",
-        "1":{
-
-        },
-        "2":{
-
-        },
-        "3":{
-
-        },
-        "4":{
-
-        },
-        "5":{
-
-        }
+        "1":[],
+        "2":[],
+        "3":[],
+        "4":[],
+        "5":[]
       })
 
     # Get the ids of the characters
