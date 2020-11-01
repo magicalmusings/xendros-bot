@@ -191,14 +191,15 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       user_data["4"] = {}
       user_data["5"] = {}
 
-    print( self.CHAR_DATA )
+    user_data = self.CHAR_DATA[message.author.id]
+    print( user_data )
 
     # Get the ids of the characters
-    char_one = self.CHAR_DATA[message.author.id].item("1")
-    char_two = self.CHAR_DATA[message.author.id].item("2")
-    char_three = self.CHAR_DATA[message.author.id].item("3")
-    char_four = self.CHAR_DATA[message.author.id].item("4")
-    char_five = self.CHAR_DATA[message.author.id].item("5")
+    char_one = user_data["1"]
+    char_two = user_data["2"]
+    char_three = user_data["3"]
+    char_four = user_data["4"]
+    char_five = user_data["5"]
 
     # ERROR CASE: If three characters are already made 
     if len(char_one) != 0 and len(char_two) != 0 and len(char_three) != 0 and len(char_four) != 0 and len(char_five) != 0:
