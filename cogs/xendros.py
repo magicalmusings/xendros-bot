@@ -370,7 +370,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       return
 
-    user_data = self.CHAR_DATA( message.author.id )
+    user_data = self.CHAR_DATA[message.author.id]
     active_char_slot = user_data["active_char"]
     active_char = user_data[active_char_slot]
 
