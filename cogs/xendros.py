@@ -627,7 +627,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     currency = CURRENCY_SWITCH.get( args[1], "NULL")
 
-    print( currency )
+    # print( currency )
 
     # ERROR CASE: If input currency is invalid
     if currency == "NULL":
@@ -639,9 +639,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If result is null 
     try:
-      print( args[0] )
+      # print( args[0] )
       char_data = await self.getCharFromName( args[0] )
-      print( char_data )
+      # print( char_data )
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       return 
@@ -682,9 +682,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     await self.getCharData( ctx )
 
     try:
-      print( args[0] )
+      # print( args[0] )
       char_data = await self.getCharFromName( args[0] )
-      print( char_data )
+      # print( char_data )
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       return 
@@ -711,6 +711,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.command( name = "setbal", pass_context = True , aliases = ['sb'])
   async def setbal( self, ctx, *args ):
 
+    await self.bot.wait_until_ready()
+
     # ERROR CASE: If # of arguments is not correct
     if len( args ) < 3:
       await self.displayErrorMessage( ctx, ERROR_CODES.SETBAL_ARGS_LENGTH_ERROR )
@@ -719,39 +721,30 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     currency = CURRENCY_SWITCH.get( args[1], "NULL")
 
     if currency == "NULL":
-
       await self.displayErrorMessage( ctx, ERROR_CODES.SETBAL_CURRENCY_ERROR )
       return
 
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT { currency } FROM char_data WHERE char_id = '{args[0]}' """)
-    result = cursor.fetchone()
+    await self.getCharData( ctx )
 
-    if result is None:
+    try:
+      # print( args[0] )
+      char_data = await self.getCharFromName( args[0] )
+      # print( char_data )
+    except:
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
+      return 
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
-      return
+    new_amt = int(args[0])
+    if new_amt < 0:
+      new_amt = 0
 
-    current_amt = int( result[0])
+    current_amt = char_data[currency]
+    char_data[currency] = new_amt
 
-    sql = ( f"""UPDATE char_data SET {currency} = ? WHERE char_id = ?""")
-    values = ( int(args[2]), int(args[0]) )
-    cursor.execute( sql, values )
-    db.commit()
-
-    cursor.execute( f"""SELECT char_Name, {currency} FROM char_data WHERE char_id = '{args[0]}'""" )
-    result = cursor.fetchone()
-
-    char_name = str(result[0])
-    new_amt = str(result[1])
+    char_name = char_data["char_name"]
+    new_amt = str( char_data[currency] )
 
     await ctx.send( f"Great, I've set {char_name}'s {currency.upper()} amount from {current_amt} {args[1].upper()} to { new_amt} { args[1].upper() } !")
-
-    cursor.close() 
-    db.close() 
 
     # End of setbal() function
 
