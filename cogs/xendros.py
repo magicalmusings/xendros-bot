@@ -734,7 +734,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       return 
 
-    new_amt = int(args[0])
+    new_amt = int(args[2])
     if new_amt < 0:
       new_amt = 0
 
