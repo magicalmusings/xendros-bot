@@ -631,10 +631,12 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If result is null 
     try:
       print( args[0] )
-      char_data = []
+      char_data_keys = []
       path = []
-      await self.getKeyPath(char_data, path, self.CHAR_DATA, args[0])
-
+      await self.getKeyPath(char_data_keys, path, self.CHAR_DATA, args[0])
+      user_id = char_data_keys[0][0]
+      active_char_slot = char_data_keys[0][1]
+      char_data = self.CHAR_DATA[user_id][active_char_slot]
       print( char_data )
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
