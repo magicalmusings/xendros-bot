@@ -698,7 +698,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       embed.add_field( name = "Total Gacha Rolls Made",
                       value = f"{ gacha_rolls }",
                       inline = True ) 
-      embed.set_footer( text = f"User ID: {user_id}, Char ID: {char_id}")
+      embed.set_footer( text = f"User ID: {user_id}, Char Slot: {active_char_slot}")
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.BALANCE_URL_ERROR )
       return
