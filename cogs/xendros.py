@@ -599,8 +599,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     await self.bot.wait_until_ready()
 
-    message = ctx.message
-
     # ERROR CASE: If # of arguments is not correct
     if len( args ) < 3:
       await self.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_ARGS_LENGTH_ERROR )
@@ -617,25 +615,22 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     await self.getCharData( ctx )
 
     # ERROR CASE: If result is null 
-    if str( message.author.id) not in self.CHAR_DATA:
+    try:
+      char_data = nested_lookup( args[0], self.CHAR_DATA )
+    except:
+      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
+      return 
+    
+    current_amt = int( char_data[currency ] )
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      return
+    char_data[currency] = str( current_amt + int( args[2] ) )
 
-    user_data = self.CHAR_DATA[ str(message.author.id) ]
-    active_char_slot = user_data["active_char"]
-    active_char = user_data[active_char_slot]
-    current_amt = int( active_char[currency ] )
-
-    active_char[currency] = str( current_amt + int( arg[2] ) )
-
-    char_name = str(result[0])
-    new_amt = str(result[1])
+    char_name = str(char_data["char_name"])
+    new_amt = str(char_data[currency])
 
     await ctx.send( f"Fantastic, I've deposited { args[2] } { args[1].upper() } into {char_name}'s account. Their new balance is {new_amt} { args[1].upper() } !")
 
-    cursor.close() 
-    db.close() 
+    await self.updateCharData( ctx )
 
     # End of deposit() function 
 
