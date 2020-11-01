@@ -892,8 +892,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     new_curr_one_amt = curr_one_amt - ( curr_to_subtract )
 
     # Update character data 
-    active_char[currency_one] = new_curr_one_amt
-    active_char[currency_two] = new_curr_two_amt
+    active_char[currency_one] = str(new_curr_one_amt)
+    active_char[currency_two] = str(new_curr_two_amt)
 
     # Display conversion success and balance to user
     await ctx.send( f"Success! I've converted your **{amt_to_convert}** {currency_one} into **{curr_to_add}** {currency_two}!! Your new balance is: ")
