@@ -284,11 +284,13 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       return
     elif str( message.author.id ) not in self.CHAR_DATA:
       return
+    elif arg > 5:
+      return
 
     # Get Character ID
     user_data = self.CHAR_DATA[ str( message.author.id ) ]
-    char_data = user_data[arg]
-    char_slot = arg
+    char_data = user_data[str(arg)]
+    char_slot = str(arg)
 
     # ERROR CASE: If the specified slot is already empty
     if len( char_data ) == 0:
