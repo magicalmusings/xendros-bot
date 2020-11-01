@@ -472,6 +472,17 @@ version = "4.7.6"
 
 [[package]]
 category = "main"
+description = "Python functions for working with deeply nested documents (lists and dicts)"
+name = "nested-lookup"
+optional = false
+python-versions = "*"
+version = "0.2.21"
+
+[package.dependencies]
+six = "*"
+
+[[package]]
+category = "main"
 description = "NumPy is the fundamental package for array computing with Python."
 name = "numpy"
 optional = false
@@ -753,7 +764,7 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [metadata]
-content-hash = "35c87b27b491590eaaae9f4b817817748a81476234def945cec47ac1b9c30e3e"
+content-hash = "682fba8e0cdcab899d3ab5107a8a43a38fbc81468735ff7044e4a1c4092430d8"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -961,6 +972,9 @@ multidict = [
     {file = "multidict-4.7.6-cp38-cp38-win32.whl", hash = "sha256:5cf311a0f5ef80fe73e4f4c0f0998ec08f954a6ec72b746f3c179e37de1d210d"},
     {file = "multidict-4.7.6-cp38-cp38-win_amd64.whl", hash = "sha256:7388d2ef3c55a8ba80da62ecfafa06a1c097c18032a501ffd4cabbc52d7f2b19"},
     {file = "multidict-4.7.6.tar.gz", hash = "sha256:fbb77a75e529021e7c4a8d4e823d88ef4d23674a202be4f5addffc72cbb91430"},
+]
+nested-lookup = [
+    {file = "nested-lookup-0.2.21.tar.gz", hash = "sha256:23789e328bd1d0b3f9db93cf51b7103a978dd0d8a834770d2c19b365e934ab96"},
 ]
 numpy = [
     {file = "numpy-1.19.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:b1cca51512299841bf69add3b75361779962f9cee7d9ee3bb446d5982e925b69"},

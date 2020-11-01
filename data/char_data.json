@@ -1,31 +1,44 @@
 {
-    "user_id": {
-        "user_name":"",
-        "active_char":"",
-        "1":{
-            "char_name":"",
-            "drive_link":"",
-            "gacha_rolls":"",
-            "action_points":"",
-            "downtime":"",
-            "lore_tokens":"",
-            "platinum":"",
-            "electrum":"",
-            "gold":"",
-            "silver":"",
-            "copper":""
+    "197158011469299713": {
+        "user_name": "Anders",
+        "active_char": "1",
+        "1": {
+            "char_name": "Alzarif",
+            "drive_link": "https://papajohns.com/",
+            "gacha_rolls": "1",
+            "action_points": "6",
+            "downtime": "0",
+            "lore_tokens": "0",
+            "platinum": "0",
+            "electrum": "0",
+            "gold": "0",
+            "silver": "0",
+            "copper": "0"
         },
-        "2":{
-
+        "2": {},
+        "3": {},
+        "4": {},
+        "5": {}
+    },
+    "366677631342477323": {
+        "user_name": "chrispy_prunes",
+        "active_char": "1",
+        "1": {
+            "char_name": "Diva",
+            "drive_link": "https://docs.google.com/spreadsheets/d/1-4HYfEpBUzsc7e64_TPtiA6n0F8cgbnvAOXfCoAaeoo/edit?usp=sharing",
+            "gacha_rolls": "0",
+            "action_points": "5",
+            "downtime": "0",
+            "lore_tokens": "0",
+            "platinum": "0",
+            "electrum": "0",
+            "gold": "319",
+            "silver": "0",
+            "copper": "200"
         },
-        "3":{
-
-        },
-        "4":{
-
-        },
-        "5":{
-
-        }
+        "2": {},
+        "3": {},
+        "4": {},
+        "5": {}
     }
 }

@@ -19,4 +19,5 @@ gspread = "^3.6"
 jsonmerge = "^1.7"
 oauth2client = "^4.1"
 python = "^3.8"
+nested-lookup = "^0.2.21"
 [tool.poetry.dev-dependencies]
