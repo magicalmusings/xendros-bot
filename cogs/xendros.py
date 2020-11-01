@@ -237,19 +237,18 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     char_name = args[0]
     drive_link = args[1]
 
-    self.CHAR_DATA[message.author.id][active_char_slot].append({
-      "char_name": f"{char_name}",
-      "drive_link": f"{drive_link}",
-      "gacha_rolls":"0",
-      "action_points":"5",
-      "downtime":"0",
-      "lore_tokens":"0",
-      "platinum":"0",
-      "electrum":"0",
-      "gold":"10",
-      "silver":"0",
-      "copper":"0"
-    })
+    active_char = self.CHAR_DATA[message.author.id][active_char_slot]
+    active_char["char_name"] = f"{char_name}"
+    active_char["drive_link"] = f"{drive_link}"
+    active_char["gacha_rolls"] = "0"
+    active_char["action_points"] = "5"
+    active_char["downtime"] = "0"
+    active_char["lore_tokens"] = "0"
+    active_char["platinum"] = "0"
+    active_char["electrum"] = "0"
+    active_char["gold"] = "0"
+    active_char["silver"] = "0"
+    active_char["copper"] = "0"
 
     with open( CHAR_DATA_PATH, WRITE_TAG ) as write_file:
       json.dump( self.CHAR_DATA , write_file )
