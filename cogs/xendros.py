@@ -16,7 +16,6 @@ from jsonmerge import merge # pylint: disable=import-error
 
 APPEND_TAG = "a"
 CHAR_DATA_PATH = "data/char_data.json"
-CHAR_DATA = {}
 CURRENCY_SWITCH = {
       'ap': "action_points",
       'cp': "copper",
@@ -84,8 +83,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Import User Data
 
     with open( CHAR_DATA_PATH, READ_TAG ) as read_file:
-      global CHAR_DATA
-      CHAR_DATA = json.load( read_file )
+      self.CHAR_DATA = json.load( read_file )
 
     # Import Magic Item Data
 
@@ -176,17 +174,15 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Grab current information from char_data
 
     with open( CHAR_DATA_PATH, READ_TAG ) as read_file:
-      global CHAR_DATA
-      CHAR_DATA = json.load( read_file )
+      self.CHAR_DATA = json.load( read_file )
 
     # ALT CASE: If this is the users first time using Kallista
-    if not message.author.id in CHAR_DATA:
+    if not message.author.id in self.CHAR_DATA:
 
       await ctx.send( "Seems like it's your first time here, love. Allow me to add you to my registry..." )
 
-      global CHAR_DATA
-      CHAR_DATA[message.author.id] = []
-      CHAR_DATA[message.author.id].append({
+      self.CHAR_DATA[message.author.id] = []
+      self.CHAR_DATA[message.author.id].append({
         "user_name": f"{message.author.name}",
         "active_char": "1",
         "1":[{}],
@@ -196,14 +192,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
         "5":[{}]
       })
 
-    print( CHAR_DATA )
+    print( self.CHAR_DATA )
 
     # Get the ids of the characters
-    char_one = CHAR_DATA[message.author.id]["1"]
-    char_two = CHAR_DATA[message.author.id]["2"]
-    char_three = CHAR_DATA[message.author.id]["3"]
-    char_four = CHAR_DATA[message.author.id]["4"]
-    char_five = CHAR_DATA[message.author.id]["5"]
+    char_one = self.CHAR_DATA[message.author.id]["1"]
+    char_two = self.CHAR_DATA[message.author.id]["2"]
+    char_three = self.CHAR_DATA[message.author.id]["3"]
+    char_four = self.CHAR_DATA[message.author.id]["4"]
+    char_five = self.CHAR_DATA[message.author.id]["5"]
 
     # ERROR CASE: If three characters are already made 
     if len(char_one) != 0 and len(char_two) != 0 and len(char_three) != 0 and len(char_four) != 0 and len(char_five) != 0:
@@ -217,30 +213,33 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     if len(char_one) == 0 and char_add_flag is False:
       char_add_flag = True
-      CHAR_DATA[message.author.id]["active_char"] = "1"
+      self.CHAR_DATA[message.author.id]["active_char"] = "1"
 
     if len(char_two) == 0 and char_add_flag is False:
       char_add_flag = True
-      CHAR_DATA[message.author.id]["active_char"] = "2"
+      self.CHAR_DATA[message.author.id]["active_char"] = "2"
 
     if len(char_three) == 0 and char_add_flag is False:
       char_add_flag = True
-      CHAR_DATA[message.author.id]["active_char"] = "3"
+      self.CHAR_DATA[message.author.id]["active_char"] = "3"
 
     if len(char_four) == 0 and char_add_flag is False:
       char_add_flag = True
-      CHAR_DATA[message.author.id]["active_char"] = "4"
+      self.CHAR_DATA[message.author.id]["active_char"] = "4"
 
     if len(char_five) == 0 and char_add_flag is False:
       char_add_flag = True
-      CHAR_DATA[message.author.id]["active_char"] = "5"
+      self.CHAR_DATA[message.author.id]["active_char"] = "5"
 
     # Initialize row for user in char_data table
-    active_char_slot = CHAR_DATA[message.author.id]["active_char"]
+    active_char_slot = self.CHAR_DATA[message.author.id]["active_char"]
 
-    CHAR_DATA[message.author.id][active_char_slot].append({
-      "char_name": f"{args[0]}",
-      "drive_link": f"{args[1]}",
+    char_name = args[0]
+    drive_link = args[1]
+
+    self.CHAR_DATA[message.author.id][active_char_slot].append({
+      "char_name": f"{char_name}",
+      "drive_link": f"{drive_link}",
       "gacha_rolls":"0",
       "action_points":"5",
       "downtime":"0",
@@ -253,7 +252,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     })
 
     with open( CHAR_DATA_PATH, WRITE_TAG ) as write_file:
-      json.dump( CHAR_DATA , write_file )
+      json.dump( self.CHAR_DATA , write_file )
 
     await ctx.send( f"You've been added to my list, {char_name}! I've given you 10 gold as a welcome gift. Hopefully ours will be an ongoing arrangement, love.")
 
