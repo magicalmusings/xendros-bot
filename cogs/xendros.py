@@ -923,61 +923,32 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     total_items = len(UNCOMMON_ITEMS['uncommon'])
 
     # Get Character Data 
+    await self.getCharData(ctx)
 
     # Check if user is registered 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'""")
-    result = cursor.fetchone()
 
     # ERROR CASE: If result is none (i.e. user is not registered)
-    if result is None:
+    if str( message.author.id ) not in self.CHAR_DATA:
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
       return 
 
-    active_char = int( result[0] )
-    char_one_id = int( result[1] )
-    char_two_id = int( result[2] )
-    char_three_id = int( result[3] )
+    user_data = self.CHAR_DATA[str(message.author.id)]
+    active_char_slot = user_data["active_char"]
+    active_char = user_data[active_char_slot]
 
-    if active_char == 1:
-      char_id = char_one_id
-    elif active_char == 2:
-      char_id = char_two_id
-    elif active_char == 3:
-      char_id = char_three_id
-
-    # Check current balance
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"SELECT gold, gacha_rolls FROM char_data WHERE char_id = '{char_id}'")
-    result = cursor.fetchone()
-
-    if result is None:
-      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
-      return
-
-    gold = int( result[0] )
-    gacha_rolls = int( result[1] )
+    gold = int(active_char["gold"])
+    gacha_rolls = int(active_char["gacha_rolls"])
 
     # ERROR CASE: Not enough money to roll
     if gold < UC_ROLL_COST:
       await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # Subtract money from balance
     # Update gacha_rolls variable
 
-    sql = ( """UPDATE char_data SET gold = ?, gacha_rolls = ? WHERE char_id = ? """)
-    values = ( gold - UC_ROLL_COST, gacha_rolls + 1, char_id )
-    cursor.execute( sql, values )
-    db.commit()
+    active_char["gold"] = str(gold - UC_ROLL_COST)
+    active_char["gacha_rolls"] = str( gacha_rolls + 1)
 
     # Get Random Number 
     await ctx.send( f"Rolling for { total_items } potential items...")
@@ -1007,8 +978,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Display Item to user
     await ctx.send( embed = embed )
 
-    cursor.close()
-    db.close()
+    await self.updateCharData(ctx)
 
     # End of rollUncommon() function
     return 
@@ -1021,61 +991,32 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     total_items = len(RARE_ITEMS['rare'])
 
     # Get Character Data 
+    await self.getCharData( ctx )
 
     # Check if user is registered 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'""")
-    result = cursor.fetchone()
 
     # ERROR CASE: If result is none (i.e. user is not registered)
-    if result is None:
+    if str( message.author.id) not in self.CHAR_DATA:
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
       return 
 
-    active_char = int( result[0] )
-    char_one_id = int( result[1] )
-    char_two_id = int( result[2] )
-    char_three_id = int( result[3] )
+    user_data = self.CHAR_DATA[str(message.author.id)]
+    active_char_slot = user_data["active_char"]
+    active_char = user_data[active_char_slot]
 
-    if active_char == 1:
-      char_id = char_one_id
-    elif active_char == 2:
-      char_id = char_two_id
-    elif active_char == 3:
-      char_id = char_three_id
-
-    # Check current balance
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"SELECT gold, gacha_rolls FROM char_data WHERE char_id = '{char_id}'")
-    result = cursor.fetchone()
-
-    if result is None:
-      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
-      return 
-
-    gold = int( result[0] )
-    gacha_rolls = int( result[1] )
+    gold = int(active_char["gold"])
+    gacha_rolls = int(active_char["gacha_rolls"])
 
     # ERROR CASE: Not enough money to roll
     if gold < R_ROLL_COST:
       await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # Subtract money from balance
     # Update gacha_rolls variable
 
-    sql = ( """UPDATE char_data SET gold = ?, gacha_rolls = ? WHERE char_id = ? """)
-    values = ( gold - R_ROLL_COST, gacha_rolls + 1, char_id )
-    cursor.execute( sql, values )
-    db.commit()
+    active_char["gold"] = str(gold - R_ROLL_COST)
+    active_char["gacha_rolls"] = str( gacha_rolls + 1)
 
     # Get Random Number 
     await ctx.send( f"Rolling for { total_items } potential items...")
@@ -1105,8 +1046,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # Display Item to user
     await ctx.send( embed = embed )
 
-    cursor.close()
-    db.close()
+    await self.updateCharData( ctx )
 
     # End of rollUncommon() function
     return 
