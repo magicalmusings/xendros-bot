@@ -13,6 +13,7 @@ import discord # pylint: disable=import-error
 import disputils # pylint: disable=import-error
 from discord.ext import commands # pylint: disable=import-error
 from jsonmerge import merge # pylint: disable=import-error
+from nested_lookup import nested_lookup # pylint: disable=import-error
 
 APPEND_TAG = "a"
 CHAR_DATA_PATH = "data/char_data.json"
@@ -596,6 +597,10 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.is_owner()
   async def deposit( self, ctx, *args ):
 
+    await self.bot.wait_until_ready()
+
+    message = ctx.message
+
     # ERROR CASE: If # of arguments is not correct
     if len( args ) < 3:
       await self.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_ARGS_LENGTH_ERROR )
@@ -609,28 +614,20 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await self.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_CURRENCY_ERROR )
       return
 
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT { currency } FROM char_data WHERE char_id = '{args[0]}' """)
-    result = cursor.fetchone()
+    await self.getCharData( ctx )
 
     # ERROR CASE: If result is null 
-    if result is None:
+    if str( message.author.id) not in self.CHAR_DATA:
 
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
       return
 
-    current_amt = int( result[0])
+    user_data = self.CHAR_DATA[ str(message.author.id) ]
+    active_char_slot = user_data["active_char"]
+    active_char = user_data[active_char_slot]
+    current_amt = int( active_char[currency ] )
 
-    sql = ( f"""UPDATE char_data SET {currency} = ? WHERE char_id = ?""")
-    values = ( current_amt + int(args[2]), int(args[0]) )
-    cursor.execute( sql, values )
-    db.commit()
-
-    cursor.execute( f"""SELECT char_Name, {currency} FROM char_data WHERE char_id = '{args[0]}'""" )
-    result = cursor.fetchone()
+    active_char[currency] = str( current_amt + int( arg[2] ) )
 
     char_name = str(result[0])
     new_amt = str(result[1])
@@ -944,9 +941,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # End of currex function
     return
 
-  # dump function
-  @commands.command( name = "dump", pass_context = True )
-  async def dump( self, ctx, *args ):
+
 
     arg = args[0]
     await ctx.send( arg )
