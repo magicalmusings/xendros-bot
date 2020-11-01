@@ -305,7 +305,11 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
       await ctx.send( "Seeing as you no longer have any characters registered with me, I will be temporarily closing your user account. Please use ```!x add [char_name] [gsheet_link]``` to open another account if you so wish. ")
 
+      await self.erase( ctx, str(message.author.id) )
+
     # End of delete function
+
+    await self.updateCharData( ctx )
 
     return
 
