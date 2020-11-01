@@ -267,99 +267,41 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # End add() function 
 
-  # generate_char_id() function 
-  #  - Support function for add(), generates character id for inputting into char_data table without conflicts
-  async def generate_char_id( self ):
-
-    # Get char data from table 
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    generated_id = 1
-
-    # iterate through and find largest char id
-    cursor.execute( f"SELECT char_id from char_data WHERE char_id = '{generated_id}'")
-    result = cursor.fetchone()
-    while result is not None:
-      generated_id += 1
-      cursor.execute( f"SELECT char_id from char_data WHERE char_id = '{generated_id}'")
-      result = cursor.fetchone()
-
-    return generated_id
-
-    # end generate_char_id() function 
-
   # delete function
   # - allows users to delete their registered character with Xendros
   @commands.command( name = "delete", pass_context = True, aliases = ["del", "d"] )
   async def delete( self, ctx, arg = None ):
 
+    await self.bot.wait_until_ready()
+
     message = ctx.message 
 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }' """)
-    result = cursor.fetchone()
+    await self.getCharData( ctx )
 
     # ERROR CASE: if result is non-existent (no characters registered)
-    if result is None:
+    if str( message.author.id ) not in self.CHAR_DATA:
       await self.displayErrorMessage( ctx, ERROR_CODES.DELETE_ARGS_LENGTH_ERROR )
-      cursor.close()
-      db.close()
       return
 
-     # Get Character ID
-    char_slot = int( arg )
+    # Get Character ID
+    user_data = self.CHAR_DATA[ str( message.author.id ) ]
+    char_data = user_data[arg]
+    char_slot = arg
 
     # ERROR CASE: If the specified slot is already empty
-    char_one_id = int( result[0] )
-    if char_one_id == 0 and char_slot == 1:
+    if len( char_data ) == 0:
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
-      cursor.close()
-      db.close()
-      return
-
-    char_two_id = int( result[1] )
-    if char_two_id == 0 and char_slot == 2:
-      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
-      cursor.close()
-      db.close()
-      return
-
-    char_three_id = int( result[2] )
-    
-    if char_three_id == 0 and char_slot == 3:
-      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # Update Character Slot
-    if char_slot == 1:
-        cursor.execute( f"""UPDATE user_chars SET char_one_id = 0 WHERE user_id = '{ message.author.id }'""")
-        db.commit()
-    elif char_slot == 2:
-        cursor.execute( f"""UPDATE user_chars SET char_two_id = 0 WHERE user_id = '{ message.author.id }'""")
-        db.commit()
-    elif char_slot == 3:
-        cursor.execute( f"""UPDATE user_chars SET char_three_id = 0 WHERE user_id = '{ message.author.id }'""")
-        db.commit()
+    char_data = {}
 
     await ctx.send( f"The character in Slot { char_slot } has been deleted." )
 
-    cursor.execute( f"""SELECT char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }' """)
-    result = cursor.fetchone()
-
     # Check if no more characters exist for this character
-    char_one_id = int( result[0] )
-    char_two_id = int( result[1] )
-    char_three_id = int( result[2] )
-    if char_one_id == 0 and char_two_id == 0 and char_three_id == 0:
+    if len( user_data["1"] ) == 0 and len( user_data["2"] ) == 0 and len( user_data["3"] ) == 0 and len( user_data["4"] ) == 0 and len( user_data["5"] ) == 0:
 
-      cursor.execute( f"""DELETE FROM user_chars WHERE user_id = '{message.author.id}' """)
       await ctx.send( "Seeing as you no longer have any characters registered with me, I will be temporarily closing your user account. Please use ```!x add [char_name] [gsheet_link]``` to open another account if you so wish. ")
-
-    cursor.close()
-    db.close()
 
     # End of delete function
 
@@ -369,27 +311,25 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.is_owner()
   async def erase( self, ctx, arg ):
 
+    await self.bot.wait_until_ready()
+
     if arg is None:
       return
 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{int(arg)}' """)
-    result = cursor.fetchone()
+    message = ctx.message 
 
-    if result is None:
+    await self.getCharData( ctx )
+
+    if str( message.author.id ) not in self.CHAR_DATA:
 
       await self.displayErrorMessage( ctx, ERROR_CODES.ERASE_NO_CHAR_ERROR )
-      cursor.close()
-      db.close()
       return
 
-    cursor.execute( f"""DELETE FROM user_chars WHERE user_id = '{int(arg)}'""")
+    del self.CHAR_DATA[str( message.author.id )]
+
+    await self.updateCharData( ctx )
 
     await ctx.send( "You have successfully deleted the specified account from my registry. Perhaps we may see them again?")
-
-    cursor.close()
-    db.close()
 
     # End of Erase Function 
 
@@ -403,169 +343,107 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: if command is not called correctly
 
+    await self.bot.wait_until_ready()
+
     if arg is None: 
+      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
+      return
+    elif arg > 5:
       await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
       return
 
     message = ctx.message
 
-    # Get character data from user_chars table 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT active_char from user_chars WHERE user_id = '{message.author.id}' """ )
-    
-    
-    result = cursor.fetchone()
+    await self.getCharData( ctx )
 
     # ERROR CASE: If there is no data for the user
-    if result is None:
+    if str( message.author.id ) not in self.CHAR_DATA:
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
       return
 
-    active_char = int( result[0] )
+    user_data = self.CHAR_DATA( message.author.id )
+    active_char_slot = user_data["active_char"]
+    active_char = user_data[active_char_slot]
 
     # ERROR CASE: If the active character is already set 
-    if active_char == arg:
+    if active_char_slot == str(arg):
       await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ACTIVE_SET_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # Get character ids from user_chars table 
-  
-    cursor.execute( f"""SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{message.author.id}'""" )
-    result = cursor.fetchone()
-
-    char_one_id = int( result[1] )
-    char_two_id = int( result[2] )
-    char_three_id = int( result[3] )
 
     # ERROR CASE: If only one character is registered
-    if char_two_id == 0 and char_three_id == 0:
+    if len( user_data["2"] ) == 0 and len( user_data["3"]) == 0 and len( user_data["4"]) == 0 and len( user_data["5"]) == 0:
 
       await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ONE_CHAR_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # ERROR CASE: If slot chosen is not filled 
-    if char_one_id == 0 and arg == 1:
+    if len(user_data["1"]) == 0 and arg == 1:
 
       await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_ONE_ERROR )
-      cursor.close()
-      db.close()
       return
 
-    elif char_two_id == 0 and arg == 2:
+    elif len(user_data["2"]) == 0 and arg == 2:
 
       await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_TWO_ERROR )
-      cursor.close()
-      db.close()
       return
 
-    elif char_three_id == 0 and arg == 3:
+    elif len(user_data["3"]) == 0 and arg == 3:
 
       await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
-      cursor.close()
-      db.close()
       return
 
-    # Set new active_char to user choice 
-    sql = (""" UPDATE user_chars SET active_char = ? WHERE user_id = ? """)
-    values = ( arg, message.author.id )
-    cursor.execute( sql, values )
-    db.commit()
+    elif len(user_data["4"]) == 0 and arg == 4:
+
+      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
+      return
+
+    elif len(user_data["5"]) == 0 and arg == 5:
+
+      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
+      return
 
     # Display successful switch of character to user 
 
-    cursor.execute( f"""SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{message.author.id}'""" )
-    result = cursor.fetchone()
+    user_data["active_char"] = str(arg)
+    active_char = user_data[str(arg)]
 
-    active_char = int( result[0] )
-    char_one_id = int( result[1] )
-    char_two_id = int( result[2] )
-    char_three_id = int( result[3] )
-
-    if active_char == 1:
-      active_char_id = char_one_id
-    elif active_char == 2:
-      active_char_id = char_two_id
-    elif active_char == 3:
-      active_char_id = char_three_id
-
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT char_name FROM char_data WHERE char_id = '{active_char_id}'""" )
-    result = cursor.fetchone()
-
-    char_name = str( result[0] )
+    char_name = active_char["char_name"]
 
     await ctx.send( f"Success! I've changed your active character to {char_name}.")
 
-    cursor.close()
-    db.close()
-
     # End of switchchar() function
+
+    return
 
   # charlink function
   # - allows users to get google drive link to character at any point
   @commands.command( name = "charlink", pass_context = True , aliases = ['link'])
   async def charlink( self, ctx ):
 
+    await self.bot.wait_until_ready()
+
     message = ctx.message
 
-    # Get current active character for user 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute(f"""SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'""")
-
-    result = cursor.fetchone()
+    await self.getCharData( ctx )
 
     # ERROR CASE: If Result is None
-    if result is None: 
-
+    if str(message.author.id) not in self.CHAR_DATA: 
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
       return
 
-    # Get Active Char ID 
-    active_char = int( result[0] )
+    user_data = self.CHAR_DATA[str(message.author.id)]
+    active_char_slot = user_data["active_char"]
+    active_char = user_data[active_char_slot]
 
-    if active_char == 1:
-      char_id = int( result[1] )
-    elif active_char == 2:
-      char_id = int( result[2] )
-    elif active_char == 3:
-      char_id = int( result[3] )
-
-    cursor.close()
-    db.close()
-
-    # Get Link for Character from char_data table 
-
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor() 
-    cursor.execute( f"SELECT user_id, char_name, drive_link FROM char_data WHERE char_id = '{char_id}'")
-    result = cursor.fetchone() 
-
-    # ERROR CASE: Character is not found in database
-    if result is None:
-      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
-      return
-
-    char_name = str( result[1] )
-    drive_link = str( result[2] )
+    char_name = active_char["char_name"]
+    drive_link = active_char["drive_link"]
 
     await ctx.send( f"Hello { char_name }! Here is the link to your character sheet (whatever that is...):")
     await ctx.send( f"{ drive_link }" )
 
-    cursor.close()
-    db.close()
+    return
 
   @commands.command( name = "charlist", pass_context = True , aliases = ["list"] )
   async def charlist( self, ctx ): 
