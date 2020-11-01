@@ -274,6 +274,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     await self.bot.wait_until_ready()
 
+    if arg is None:
+      return 
+
     message = ctx.message 
 
     await self.getCharData( ctx )
