@@ -606,6 +606,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     currency = CURRENCY_SWITCH.get( args[1], "NULL")
 
+    print( currency )
+
     # ERROR CASE: If input currency is invalid
     if currency == "NULL":
 
@@ -616,12 +618,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If result is null 
     try:
+      print( args[0] )
       char_data = nested_lookup( self.CHAR_DATA, key = 'char_name', value=args[0] )
+      print( char_data )
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       return 
 
-    print( char_data )
+    
     
     current_amt = int( char_data.get(currency) )
 
