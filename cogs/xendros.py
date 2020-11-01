@@ -739,7 +739,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       new_amt = 0
 
     current_amt = char_data[currency]
-    char_data[currency] = new_amt
+    char_data[currency] = str(new_amt)
 
     char_name = char_data["char_name"]
     new_amt = str( char_data[currency] )
