@@ -748,6 +748,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # End of setbal() function
 
+    await self.updateCharData( ctx )
+
     return 
 
   # currex function
@@ -763,29 +765,15 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     message = ctx.message
 
     # Get user char data 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'""")
-    result = cursor.fetchone()
 
     # ERROR CASE: If user is not registered
-    if result is None:
+    if str( message.author.id) not in self.CHAR_DATA:
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
       return
 
-    active_char = int( result[0] )
-    char_one_id = int( result[1] )
-    char_two_id = int( result[2] )
-    char_three_id = int( result[3] )
-
-    if active_char == 1:
-      char_id = char_one_id
-    elif active_char == 2:
-      char_id = char_two_id
-    elif active_char == 3:
-      char_id = char_three_id
+    user_data = self.CHAR_DATA[str(message.author.id)]
+    active_char_slot = user_data["active_char"]
+    active_char = user_data[active_char_slot]
 
     amt_to_convert = int( args[0] )
     currency_one = CURRENCY_SWITCH.get( args[1], "NULL")
@@ -794,57 +782,34 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If input currency is invalid
     if currency_one == "NULL" or currency_two == "NULL":
       await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CURRENCY_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # ERROR CASE: If downtime is attempted for conversion
     elif currency_one == "downtime" or currency_two == "downtime":
       await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_DOWNTIME_INPUT_ERROR )
-      cursor.close()
-      db.close()
       return
 
     elif currency_one == "action_points" or currency_one == "lore_tokens" or currency_two == "action_points" or currency_two == "lore_tokens":
       await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_AP_LT_CONVERSION_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # ERROR CASE: If ap / lt and pp/ep/gp/sp/cp are being converted between.
     elif (currency_one == "action_points" or currency_one == "lore_tokens") and (currency_two == "platinum" or currency_two == "gold" or currency_two == "silver" or currency_two == "copper" or currency_two == "electrum"):
       await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR )
-      cursor.close()
-      db.close()
       return
 
     elif (currency_two == "action_points" or currency_two == "lore_tokens") and (currency_one == "platinum" or currency_one == "gold" or currency_one == "silver" or currency_one == "copper" or currency_one == "electrum"):
       await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # Check current balance
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"SELECT {currency_one}, {currency_two} FROM char_data WHERE char_id = '{char_id}'")
-    result = cursor.fetchone()
-
-    # ERROR CASE: If character does not exist
-    if result is None:
-      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
-      return
 
     # Check amt of first currency
-    curr_one_amt = int( result[0] )
+    curr_one_amt = int( active_char[currency_one] )
 
     # ERROR CASE: if we don't have enough currency in order to make it work
     if curr_one_amt == 0:
-      # Error message 
-      cursor.close()
-      db.close()
+      await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_NOT_ENOUGH_CURRENCY_ERROR )
       return 
 
     # If we don't have enough currency, but still have currency:
@@ -853,7 +818,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await ctx.send( f"Oops, looks like you don't have all the currency to convert. I'll just use the **{curr_one_amt}** {currency_one} that's left in your account." )
       amt_to_convert = curr_one_amt
 
-    curr_two_amt = int( result[1] )
+    curr_two_amt = int( active_char[currency_two] )
 
     conversion_chart = {
       "platinum": {
@@ -899,8 +864,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: Converting between the same currency
     if conversion_rate == 1 or backwards_conversion_rate == 1:
       await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_NO_CONVERSION_NEEDED_ERROR )
-      cursor.close()
-      db.close()
       return
     
     # Examples of conversion are included below. For the purposes of examples, lets say the user currently has: 
@@ -914,8 +877,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: 
     if curr_to_add <= 0:
       await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_NOT_ENOUGH_CURRENCY_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # Add amt of currency to new currency_two total 
@@ -931,78 +892,16 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     new_curr_one_amt = curr_one_amt - ( curr_to_subtract )
 
     # Update character data 
-    sql = ( f"""UPDATE char_data SET {currency_one} = ?, {currency_two} = ? WHERE char_id = ?""")
-    values = ( new_curr_one_amt, new_curr_two_amt, char_id )
-    cursor.execute( sql, values )
-    db.commit()
+    active_char[currency_one] = new_curr_one_amt
+    active_char[currency_two] = new_curr_two_amt
 
     # Display conversion success and balance to user
     await ctx.send( f"Success! I've converted your **{amt_to_convert}** {currency_one} into **{curr_to_add}** {currency_two}!! Your new balance is: ")
+    await self.updateCharData( ctx )
+
     await self.balance( ctx )
 
-    # close out database
-    cursor.close()
-    db.close()
-
     # End of currex function
-    return
-
-
-
-    arg = args[0]
-    await ctx.send( arg )
-    await ctx.send( type( arg ) )
-    
-    if arg is None:
-      # DUMP_ARG_LENGTH_ERROR
-      await ctx.send( "returned ")
-      return
-    elif arg != "user_chars" and arg != "char_data":
-      # DUMP_INVALID_DB_ERROR
-      await ctx.send( "returned" )
-      return
-
-    await ctx.send( "C1: Checked Args")
-
-    if arg == "user_chars":
-      path = USER_CHARS_DATA_PATH
-      sql = ("""SELECT user_name, user_id, active_char, char_one_id, char_two_id, char_three_id FROM user_chars ORDER BY user_name """)
-    elif arg == "char_data":
-      path = CHAR_DATA_PATH
-      sql = ("""SELECT char_name, char_id, user_id, drive_link, action_points, downtime, lore_tokens, platinum, electrum, gold, silver, copper, gacha_rolls FROM char_data ORDER BY char_name """)
-
-    await ctx.send( "C2: Set path and SQL commands ")
-
-    db = sqlite3.connect( path )
-    cursor = db.cursor()
-    cursor.execute( sql )
-    result = cursor.fetchall()
-
-    await ctx.send( "C3: Fetched data from database")
-
-    headers = [i[0] for i in cursor.description]
-
-    await ctx.send( "C4: Autogenerated headers")
-
-    date = datetime.now()
-    dt_str = date.strftime("%d_%m_%y_%h_%m_%s")
-
-    await ctx.send( "C5: Got date")
-
-    csvFile = csv.writer( open( f"data/dump/{arg}_{dt_str}.csv", WRITE_TAG, newline=''), delimiter=',', lineterminator='\r\n', quoting=csv.QUOTE_ALL, escapechar='\\')
-
-    await ctx.send( "C6: Created csv file in data directory ")
-
-    csvFile.writerow( headers )
-    csvFile.writerows( result )
-
-    print( 'data export successful')
-
-    await ctx.send( "Data Export Successful!")
-
-    cursor.close()
-    db.close()
-
     return
     
   
