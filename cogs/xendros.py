@@ -257,7 +257,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     active_char["lore_tokens"] = "0"
     active_char["platinum"] = "0"
     active_char["electrum"] = "0"
-    active_char["gold"] = "0"
+    active_char["gold"] = "10"
     active_char["silver"] = "0"
     active_char["copper"] = "0"
 
@@ -570,75 +570,73 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.command( name = "charlist", pass_context = True , aliases = ["list"] )
   async def charlist( self, ctx ): 
 
+    await self.bot.wait_until_ready()
+    
     message = ctx.message
 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"""SELECT char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'""")
-    result = cursor.fetchone()
+    await self.getCharData( ctx )
 
     # ERROR CASE: If result is none
-    if result is None: 
-
+    if str(message.author.id) not in self.CHAR_DATA: 
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
       return 
-
-    char_one_id = int( result[0] )
-    char_two_id = int( result[1] )
-    char_three_id = int( result[2] )
-
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
 
     embed = discord.Embed(
       title = f"Characters for { message.author }",
       color = discord.Color.dark_blue()
     )
 
-    if char_one_id != 0:
-      cursor.execute( f"""SELECT char_name FROM char_data WHERE char_id = '{char_one_id}'""")
-      result = cursor.fetchone()
-      char_name = str( result[0] )
+    user_data = self.CHAR_DATA[str(message.author.id)]
+
+    if len( user_data["1"] ) != 0:
+      char_name = user_data["1"]["char_name"]
       embed.add_field( name = "Character Slot 1", 
-                       value = f"{char_name} ({char_one_id})",
+                       value = f"{char_name}",
                        inline = False )
-    elif char_one_id == 0:
-      embed.add_field( name = "Character Slot 1", 
-                       value = f"NONE",
+    elif len( user_data["1"] == 0):
+      embed.add_field( name = "Character Slot 1",
+                       value = "NONE",
                        inline = False )
-    
-    if char_two_id != 0:
-      cursor.execute( f"""SELECT char_name FROM char_data WHERE char_id = '{char_two_id}'""")
-      result = cursor.fetchone()
-      char_name = str( result[0] )
+    if len( user_data["2"] ) != 0:
+      char_name = user_data["2"]["char_name"]
       embed.add_field( name = "Character Slot 2", 
-                       value = f"{char_name} ({char_two_id})",
+                       value = f"{char_name}",
                        inline = False )
-    elif char_two_id == 0:
-      embed.add_field( name = "Character Slot 2", 
-                       value = f"NONE",
+    elif len( user_data["2"] == 0):
+      embed.add_field( name = "Character Slot 2",
+                       value = "NONE",
                        inline = False )
-    
-    if char_three_id != 0:
-      cursor.execute( f"""SELECT char_name FROM char_data WHERE char_id = '{char_three_id}'""")
-      result = cursor.fetchone()
-      char_name = str( result[0] )
+    if len( user_data["3"] ) != 0:
+      char_name = user_data["3"]["char_name"]
       embed.add_field( name = "Character Slot 3", 
-                       value = f"{char_name} ({char_three_id})",
+                       value = f"{char_name}",
                        inline = False )
-    elif char_three_id == 0:
-      embed.add_field( name = "Character Slot 3", 
-                       value = f"NONE",
+    elif len( user_data["3"] == 0):
+      embed.add_field( name = "Character Slot 3",
+                       value = "NONE",
+                       inline = False )
+    if len( user_data["4"] ) != 0:
+      char_name = user_data["4"]["char_name"]
+      embed.add_field( name = "Character Slot 4", 
+                       value = f"{char_name}",
+                       inline = False )
+    elif len( user_data["4"] == 0):
+      embed.add_field( name = "Character Slot 4",
+                       value = "NONE",
+                       inline = False )
+    if len( user_data["5"] ) != 0:
+      char_name = user_data["5"]["char_name"]
+      embed.add_field( name = "Character Slot 5", 
+                       value = f"{char_name}",
+                       inline = False )
+    elif len( user_data["5"] == 0):
+      embed.add_field( name = "Character Slot 5",
+                       value = "NONE",
                        inline = False )
 
     await ctx.send( embed = embed )
 
     # End of charlist() function 
-    cursor.close()
-    db.close()
-
     return 
 
   
