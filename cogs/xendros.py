@@ -15,7 +15,8 @@ from discord.ext import commands # pylint: disable=import-error
 from jsonmerge import merge # pylint: disable=import-error
 
 APPEND_TAG = "a"
-CHAR_DATA_PATH = "data/char_data.sqlite"
+CHAR_DATA_PATH = "data/char_data.json"
+CHAR_DATA = {}
 CURRENCY_SWITCH = {
       'ap': "action_points",
       'cp': "copper",
@@ -36,7 +37,6 @@ READ_TAG = "r"
 UC_ROLL_COST = 275
 UNCOMMON_ITEMS = {}
 UNCOMMON_ITEMS_PATH = "data/uncommon.json"
-USER_CHARS_DATA_PATH = "data/user_chars.sqlite"
 VR_ROLL_COST = 27500
 VERYRARE_ITEMS = {}
 VERYRARE_ITEMS_PATH = "data/veryrare.json"
@@ -81,6 +81,12 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     self.bot = bot
 
+    # Import User Data
+
+    with open( CHAR_DATA_PATH, READ_TAG ) as read_file:
+      global CHAR_DATA
+      CHAR_DATA = json.load( read_file )
+
     # Import Magic Item Data
 
     # Uncommon Items 
@@ -98,45 +104,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       RARE_ITEMS = json.load( read_file )
 
     print( f"Loaded {len(RARE_ITEMS['rare'])} rare magic items!" )
-
-    # Import / Create SQL Databases 
-
-    # User Characters Database 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( '''CREATE TABLE IF NOT EXISTS user_chars(
-      user_id integer PRIMARY KEY,
-      user_name text,
-      active_char integer DEFAULT 1,
-      char_one_id integer DEFAULT 0,
-      char_two_id integer DEFAULT 0,
-      char_three_id integer DEFAULT 0
-    );
-    ''')
-    cursor.close()
-    db.close()
-
-    # Character Data Database 
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( '''CREATE TABLE IF NOT EXISTS char_data(
-      char_id integer PRIMARY KEY,
-      user_id integer DEFAULT 0,
-      drive_link text,
-      char_name text,
-      action_points integer DEFAULT 0,
-      downtime integer DEFAULT 0,
-      lore_tokens integer DEFAULT 0,
-      platinum integer DEFAULT 0,
-      electrum integer DEFAULT 0,
-      gold integer DEFAULT 0,
-      silver integer DEFAULT 0,
-      copper integer DEFAULT 0,
-      gacha_rolls integer DEFAULT 0
-    );
-    ''')
-    cursor.close()
-    db.close()
 
     # End __init__() function
 
@@ -195,6 +162,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.command( name = "add", pass_context = True )
   async def add( self, ctx, *args ):
 
+    await self.bot.wait_until_ready()
+
     # ERROR CASE(S): If command is given improperly 
     if args is None or len( args ) < 2:
       
@@ -204,89 +173,93 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     char_add_flag = False
     message = ctx.message
     
-    # Grab current information from user_chars table 
+    # Grab current information from char_data
 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( 
-      f"SELECT user_id, active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'")
-
-    result = cursor.fetchone()
+    with open( CHAR_DATA_PATH, READ_TAG ) as read_file:
+      global CHAR_DATA
+      CHAR_DATA = json.load( read_file )
 
     # ALT CASE: If this is the users first time using Kallista
-    if result is None:
+    if not message.author.id in CHAR_DATA:
 
       await ctx.send( "Seems like it's your first time here, love. Allow me to add you to my registry..." )
 
-      # Initialize data for user in user_chars table 
+      CHAR_DATA[message.author.id] = []
+      CHAR_DATA[message.author.id].append({
+        "user_name": f"{message.author.name}",
+        "active_char": "1",
+        "1":{
 
-      sql = ("""
-      INSERT INTO user_chars(
-        user_id, user_name, active_char, char_one_id, char_two_id, char_three_id
-      ) VALUES ( ?, ? , ? , ? , ? , ? )
-      """)
-      values = ( message.author.id, message.author.name, 1, 0, 0, 0 )
-      cursor.execute( sql, values )
-      db.commit()
+        },
+        "2":{
 
-      cursor.execute( f"SELECT user_id, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'")
-      result = cursor.fetchone()
+        },
+        "3":{
+
+        },
+        "4":{
+
+        },
+        "5":{
+
+        }
+      })
 
     # Get the ids of the characters
-    char_one_id = int( result[1] )
-    char_two_id = int( result[2] )
-    char_three_id = int( result[3] )
+    char_one = CHAR_DATA[message.author.id]["1"]
+    char_two = CHAR_DATA[message.author.id]["2"]
+    char_three = CHAR_DATA[message.author.id]["3"]
+    char_four = CHAR_DATA[message.author.id]["4"]
+    char_five = CHAR_DATA[message.author.id]["5"]
 
     # ERROR CASE: If three characters are already made 
-    if char_one_id !=0 and char_two_id != 0 and char_three_id != 0:
+    if len(char_one) != 0 and len(char_two) != 0 and len(char_three) != 0 and len(char_four) != 0 and len(char_five) != 0:
       await self.displayErrorMessage( ctx, ERROR_CODES.TOO_MANY_CHARS_ERROR )
-      cursor.close()
-      db.close()
       return
 
-    new_id = await self.generate_char_id()
     char_name = args[0]
 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
+    # Set active character to new character
+    # Add character default data to the set char
 
-    # Set active character to new character 
-
-    if char_one_id == 0 and char_add_flag is False:
+    if len(char_one) == 0 and char_add_flag is False:
       char_add_flag = True
-      sql = ("""UPDATE user_chars SET char_one_id = ? WHERE user_id = ? """)
+      CHAR_DATA[message.author.id]["active_char"] = "1"
 
-    if char_two_id == 0 and char_add_flag is False:
+    if len(char_two) == 0 and char_add_flag is False:
       char_add_flag = True
-      sql = ("""UPDATE user_chars SET char_two_id = ? WHERE user_id = ? """)
+      CHAR_DATA[message.author.id]["active_char"] = "2"
 
-    if char_three_id == 0 and char_add_flag is False:
+    if len(char_three) == 0 and char_add_flag is False:
       char_add_flag = True
-      sql = ("""UPDATE user_chars SET char_three_id = ? WHERE user_id = ? """)
+      CHAR_DATA[message.author.id]["active_char"] = "3"
 
-    values = ( new_id, message.author.id )
-    cursor.execute( sql, values )
-    db.commit()
-    cursor.close()
-    db.close()
+    if len(char_four) == 0 and char_add_flag is False:
+      char_add_flag = True
+      CHAR_DATA[message.author.id]["active_char"] = "4"
+
+    if len(char_five) == 0 and char_add_flag is False:
+      char_add_flag = True
+      CHAR_DATA[message.author.id]["active_char"] = "5"
 
     # Initialize row for user in char_data table
+    active_char_slot = CHAR_DATA[message.author.id]["active_char"]
 
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    sql = ("""
-    INSERT INTO char_data(
-      char_id, user_id, drive_link, char_name, action_points, downtime, lore_tokens, platinum, electrum, gold, silver, copper, gacha_rolls
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-    """)
-    values = ( new_id, message.author.id, args[1], char_name, 5, 0, 0, 0, 0, 10, 0, 0, 0 )
-    cursor.execute( sql, values )
-    db.commit()
+    CHAR_DATA[message.author.id][active_char_slot].append({
+      "char_name": f"{args[0]}",
+      "drive_link": f"{args[1]}",
+      "gacha_rolls":"0",
+      "action_points":"5",
+      "downtime":"0",
+      "lore_tokens":"0",
+      "platinum":"0",
+      "electrum":"0",
+      "gold":"10",
+      "silver":"0",
+      "copper":"0"
+    })
 
     await ctx.send( f"You've been added to my list, {char_name}! I've given you 10 gold as a welcome gift. Hopefully ours will be an ongoing arrangement, love.")
-
-    cursor.close()
-    db.close()
 
     # End add() function 
 

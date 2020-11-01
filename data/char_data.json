@@ -1,0 +1,31 @@
+{
+    "user_id": {
+        "user_name":"",
+        "active_char":"",
+        "1":{
+            "char_name":"",
+            "drive_link":"",
+            "gacha_rolls":"",
+            "action_points":"",
+            "downtime":"",
+            "lore_tokens":"",
+            "platinum":"",
+            "electrum":"",
+            "gold":"",
+            "silver":"",
+            "copper":""
+        },
+        "2":{
+
+        },
+        "3":{
+
+        },
+        "4":{
+
+        },
+        "5":{
+
+        }
+    }
+}
