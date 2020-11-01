@@ -593,7 +593,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       embed.add_field( name = "Character Slot 1", 
                        value = f"{char_name}",
                        inline = False )
-    elif len( user_data["1"] == 0):
+    elif len( user_data["1"] ) == 0:
       embed.add_field( name = "Character Slot 1",
                        value = "NONE",
                        inline = False )
@@ -602,7 +602,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       embed.add_field( name = "Character Slot 2", 
                        value = f"{char_name}",
                        inline = False )
-    elif len( user_data["2"] == 0):
+    elif len( user_data["2"] ) == 0:
       embed.add_field( name = "Character Slot 2",
                        value = "NONE",
                        inline = False )
@@ -611,7 +611,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       embed.add_field( name = "Character Slot 3", 
                        value = f"{char_name}",
                        inline = False )
-    elif len( user_data["3"] == 0):
+    elif len( user_data["3"] ) == 0:
       embed.add_field( name = "Character Slot 3",
                        value = "NONE",
                        inline = False )
@@ -620,7 +620,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       embed.add_field( name = "Character Slot 4", 
                        value = f"{char_name}",
                        inline = False )
-    elif len( user_data["4"] == 0):
+    elif len( user_data["4"] ) == 0:
       embed.add_field( name = "Character Slot 4",
                        value = "NONE",
                        inline = False )
@@ -629,7 +629,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       embed.add_field( name = "Character Slot 5", 
                        value = f"{char_name}",
                        inline = False )
-    elif len( user_data["5"] == 0):
+    elif len( user_data["5"] ) == 0:
       embed.add_field( name = "Character Slot 5",
                        value = "NONE",
                        inline = False )
