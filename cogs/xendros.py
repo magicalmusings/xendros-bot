@@ -616,7 +616,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If result is null 
     try:
-      char_data = nested_lookup( args[0], self.CHAR_DATA )
+      char_data = nested_lookup( self.CHAR_DATA, key = 'char_name', value=args[0] )
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       return 
