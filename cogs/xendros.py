@@ -195,7 +195,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
         "5":[]
       })
 
-    print( CHAR_DATA )
+    json.dumps( CHAR_DATA, indent = 4)
 
     # Get the ids of the characters
     char_one = CHAR_DATA[message.author.id][2]
