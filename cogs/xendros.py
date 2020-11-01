@@ -284,7 +284,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       return
     elif str( message.author.id ) not in self.CHAR_DATA:
       return
-    elif arg > 5:
+    elif int(arg) > 5:
       return
 
     # Get Character ID
