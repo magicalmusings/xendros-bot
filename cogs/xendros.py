@@ -650,54 +650,31 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     message = ctx.message
 
-    db = sqlite3.connect( USER_CHARS_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"SELECT active_char, char_one_id, char_two_id, char_three_id FROM user_chars WHERE user_id = '{ message.author.id }'")
-
-    result = cursor.fetchone()
+    await self.getCharData( ctx )
 
     # ERROR CASE: If the player has not yet registered with the bot
-    if result is None:
-
+    if str(message.author.id) not in self.CHAR_DATA:
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
       return
 
     # Find Active Character
-    active_char = int( result[0] )
+    user_data = self.CHAR_DATA[str(message.author.id)]
 
-    if active_char == 1:
-      char_id = int( result[1] )
-    elif active_char == 2:
-      char_id = int( result[2] )
-    elif active_char == 3:
-      char_id = int( result[3] )
+    active_char_slot = user_data["active_char"]
+    active_char = user_data[active_char_slot]
 
-
-    db = sqlite3.connect( CHAR_DATA_PATH )
-    cursor = db.cursor()
-    cursor.execute( f"SELECT user_id, drive_link, char_name, action_points, downtime, lore_tokens, platinum, electrum, gold, silver, copper, gacha_rolls FROM char_data WHERE char_id = '{char_id}'")
-    result = cursor.fetchone()
-
-    if result is None:
-      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
-      cursor.close()
-      db.close()
-      return
-
-    user_id = int( result[0] )
-    drive_link = str( result[1] )
-    char_name = str( result[2] )
-    action_points = int( result[3] )
-    downtime = int( result[4] )
-    lore_tokens = int( result[5] )
-    platinum = int( result[6] )
-    electrum = int( result[7] )
-    gold = int( result[8] )
-    silver = int( result[9] )
-    copper = int( result[10] )
-    gacha_rolls = int( result[11] )
+    user_id = str(message.author.id)
+    drive_link = active_char["drive_link"]
+    char_name = active_char["char_name"]
+    action_points = int(active_char["action_points"])
+    downtime = int(active_char["downtime"])
+    lore_tokens = int(active_char["lore_tokens"])
+    platinum = int(active_char["platinum"])
+    electrum = int(active_char["electrum"])
+    gold = int(active_char["gold"])
+    silver = int(active_char["silver"])
+    copper = int(active_char["copper"])
+    gacha_rolls = int(active_char["gacha_rolls"])
 
     # Create Embed for display
     try: 
