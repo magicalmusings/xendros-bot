@@ -4,6 +4,7 @@ import json
 import math
 import os
 import sqlite3
+from copy import copy
 from datetime import datetime
 from random import randint
 
@@ -592,6 +593,17 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # End of balance() function
 
+  async def getKeyPath( self, results, path, d, target ):
+
+    for key, value in d.items():
+
+      path.append(key)
+      if isinstance( value, dict ):
+        await self.getKeyPath( results, path, value, target )
+      if value == target:
+        results.append( copy(path) )
+      path.pop()
+    
   # deposit function 
   @commands.command( name = "deposit", pass_context = True , aliases = ['dep'])
   @commands.is_owner()
@@ -619,13 +631,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE: If result is null 
     try:
       print( args[0] )
-      char_data = [char for char, name in self.CHAR_DATA.iteritems() if name == args[0]]
+      char_data = []
+      path = []
+      await self.getKeyPath(char_data, path, self.CHAR_DATA, args[0])
+
       print( char_data )
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
       return 
-
-    
     
     current_amt = int( char_data.get(currency) )
 
