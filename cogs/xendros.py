@@ -188,7 +188,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     await self.getCharData( ctx )
 
     # ALT CASE: If this is the users first time using Kallista
-    if not message.author.id in self.CHAR_DATA:
+    if message.author.id not in self.CHAR_DATA:
 
       await ctx.send( "Seems like it's your first time here, love. Allow me to add you to my registry..." )
 
