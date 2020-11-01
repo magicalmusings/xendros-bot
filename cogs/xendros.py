@@ -357,7 +357,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     if arg is None: 
       await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
       return
-    elif arg > 5:
+    elif int(arg) > 5:
       await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
       return
 
@@ -1160,6 +1160,12 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   #     >> TODO: update individual stats when adding a new character
   #     >> TODO: when Xendros first boots up
   #     >> TODO: when !x update is called
+
+  ## Shopkeeping Functions
+  # TODO: Implement Shops of Different Kinds
+  # TODO: Implement Buying / Selling of Items
+  # TODO: Implement buyback of items
+  # 
 
 # End Xendros Cog
 
