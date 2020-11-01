@@ -370,7 +370,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       return
 
-    user_data = self.CHAR_DATA[message.author.id]
+    user_data = self.CHAR_DATA[str(message.author.id)]
     active_char_slot = user_data["active_char"]
     active_char = user_data[active_char_slot]
 
@@ -378,8 +378,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     if active_char_slot == str(arg):
       await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ACTIVE_SET_ERROR )
       return
-
-    # Get character ids from user_chars table 
 
     # ERROR CASE: If only one character is registered
     if len( user_data["2"] ) == 0 and len( user_data["3"]) == 0 and len( user_data["4"]) == 0 and len( user_data["5"]) == 0:
