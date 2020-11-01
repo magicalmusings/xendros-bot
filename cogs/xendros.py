@@ -182,16 +182,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await ctx.send( "Seems like it's your first time here, love. Allow me to add you to my registry..." )
 
       self.CHAR_DATA[message.author.id] = {}
-
-      self.CHAR_DATA[message.author.id].append({
-        "user_name": f"{message.author.name}",
-        "active_char": "1",
-        "1":{},
-        "2":{},
-        "3":{},
-        "4":{},
-        "5":{}
-      })
+      user_data = self.CHAR_DATA[message.author.id]
+      user_data["user_name"] = f"{message.author.name}"
+      user_data["active_char"] = "1"
+      user_data["1"] = {}
+      user_data["2"] = {}
+      user_data["3"] = {}
+      user_data["4"] = {}
+      user_data["5"] = {}
 
     print( self.CHAR_DATA )
 
