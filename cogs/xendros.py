@@ -182,13 +182,6 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await ctx.send( "Seems like it's your first time here, love. Allow me to add you to my registry..." )
 
       self.CHAR_DATA[message.author.id] = []
-      self.CHAR_DATA[message.author.id]['user_name'] = f"{message.author.name}"
-      self.CHAR_DATA[message.author.id]['active_char'] = "1"
-      self.CHAR_DATA[message.author.id]["1"] = []
-      self.CHAR_DATA[message.author.id]["2"] = []
-      self.CHAR_DATA[message.author.id]["3"] = []
-      self.CHAR_DATA[message.author.id]["4"] = []
-      self.CHAR_DATA[message.author.id]["5"] = []
 
       # self.CHAR_DATA[message.author.id].append({
         # "user_name": f"{message.author.name}",
@@ -203,11 +196,11 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     print( self.CHAR_DATA )
 
     # Get the ids of the characters
-    char_one = self.CHAR_DATA[message.author.id]["1"]
-    char_two = self.CHAR_DATA[message.author.id]["2"]
-    char_three = self.CHAR_DATA[message.author.id]["3"]
-    char_four = self.CHAR_DATA[message.author.id]["4"]
-    char_five = self.CHAR_DATA[message.author.id]["5"]
+    char_one = self.CHAR_DATA[message.author.id].item("1")
+    char_two = self.CHAR_DATA[message.author.id].item("2")
+    char_three = self.CHAR_DATA[message.author.id].item("3")
+    char_four = self.CHAR_DATA[message.author.id].item("4")
+    char_five = self.CHAR_DATA[message.author.id].item("5")
 
     # ERROR CASE: If three characters are already made 
     if len(char_one) != 0 and len(char_two) != 0 and len(char_three) != 0 and len(char_four) != 0 and len(char_five) != 0:
