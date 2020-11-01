@@ -73,6 +73,7 @@ class ERROR_CODES( enum.Enum ):
   CURREX_NO_CONVERSION_NEEDED_ERROR = 28
   CURREX_AP_LT_CONVERSION_ERROR = 29
   CURREX_NOT_ENOUGH_CURRENCY_ERROR = 30
+  ROLLCOMMAND_SUBCOMMAND_ERROR = 31
 
 class XendrosCog( commands.Cog, name = "Xendros" ):
 
@@ -154,7 +155,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       # TODO: Implement ap/lt conversion function 
       ERROR_CODES.CURREX_AP_LT_CONVERSION_ERROR: "I cannot convert AP to LT or vice versa with this command. Please consider using another in order to do so. ",
       ERROR_CODES.CURREX_NOT_ENOUGH_CURRENCY_ERROR: "There is unfortunately not enough currency to convert. Consider checking your balance using ```!x balance``` before attempting another conversion.",
-
+      ERROR_CODES.ROLLCOMMAND_SUBCOMMAND_ERROR: "Invalid subcommand passed... please try using the command like !x roll <parameter>",
     }
 
     error_msg_str = error_messages.get( error_code, "CODE NOT FOUND" )
@@ -1049,9 +1050,11 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # End of rollUncommon() function
     return 
 
-  # rollVeryRare function  
+  # rollVeryRare function
+  # TODO: implement very rare item rolls (debug)
 
   # rollLegendary function
+  # TODO: implement legendary item rolls (debug)
   
   # GachaAdmin Command Group
   @commands.group( name = "gachadebug", pass_context = True , aliases = ["gd"])
@@ -1139,9 +1142,24 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     return 
 
   # rollVeryRare_admin
+  # TODO: implement very rare item rolls (debug)
   
-  # rollLegendary_admin
+  # rollLegendary_admin 
+  # TODO: implement legendary item rolls (debug)
 
+  ## Dice Rolling Functions 
+  # TODO: implement skill check rolls
+  # TODO: implement saving throw rolls
+  # TODO: implement dice rolling in general
+  #   > TODO: allow users to roll via "1d20", "2d4 +4", etc.
+  #   > TODO: allow multiple dice rolls at once via "(1d20 +6) (1d4)"
+  # TODO: integrate character sheets with kallista to track stats for rolls
+  #   > TODO: get new google drive API key
+  #   > TODO: update JSON to include stats for skill checks / saving throws 
+  #   > TODO: implement update function to call when:
+  #     >> TODO: update individual stats when adding a new character
+  #     >> TODO: when Xendros first boots up
+  #     >> TODO: when !x update is called
 
 # End Xendros Cog
 
