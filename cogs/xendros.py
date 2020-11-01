@@ -298,7 +298,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       return
 
     # Update Character Slot
-    char_data = {}
+    self.CHAR_DATA[ str( message.author.id ) ][char_slot] = {}
 
     await ctx.send( f"The character in Slot { char_slot } has been deleted." )
 
