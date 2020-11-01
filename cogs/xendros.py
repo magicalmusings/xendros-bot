@@ -701,14 +701,9 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       embed.set_footer( text = f"User ID: {user_id}, Char ID: {char_id}")
     except:
       await self.displayErrorMessage( ctx, ERROR_CODES.BALANCE_URL_ERROR )
-      cursor.close()
-      db.close()
       return
 
     await ctx.send( embed = embed )    
-
-    cursor.close()
-    db.close() 
 
     # End of balance() function
 
