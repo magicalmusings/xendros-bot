@@ -1060,7 +1060,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   async def rollVeryRare( self, ctx, arg = None ):
 
     message = ctx.message
-    total_items = len(VERYRARE_ITEMS['rare'])
+    total_items = len(VERYRARE_ITEMS['veryrare'])
 
     # Get Character Data 
     await self.getCharData( ctx )
