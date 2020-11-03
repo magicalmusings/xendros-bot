@@ -1,7 +1,7 @@
 from __future__ import print_function
 
-import discord
-from discord.ext import commands
+import discord # pylint: disable=import-error
+from discord.ext import commands # pylint: disable=import-error
 import sys
 
 HELP_LINK = "https://magicalmusings.github.io/xendros-bot/"
