@@ -104,6 +104,12 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     print( f"Loaded {len(RARE_ITEMS['rare'])} rare magic items!" )
 
+    with open( VERYRARE_ITEMS_PATH, READ_TAG ) as read_file:
+      global VERYRARE_ITEMS
+      VERYRARE_ITEMS = json.load( read_file )
+
+    print( f"Loaded {len(VERYRARE_ITEMS['veryrare'])} very rare magic items!" )
+
     # End __init__() function
 
   ## Main Functions 
@@ -1049,10 +1055,77 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     return 
 
   # rollVeryRare function
-  # TODO: implement very rare item rolls (debug)
+  # TODO: implement very rare item rolls
+  @gacharoll.command( name = "veryrare", pass_context = True, aliases = ["vr", "VR"])
+  async def rollVeryRare( self, ctx, arg = None ):
+
+    message = ctx.message
+    total_items = len(VERYRARE_ITEMS['rare'])
+
+    # Get Character Data 
+    await self.getCharData( ctx )
+
+    # Check if user is registered 
+
+    # ERROR CASE: If result is none (i.e. user is not registered)
+    if str( message.author.id) not in self.CHAR_DATA:
+      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+      return 
+
+    user_data = self.CHAR_DATA[str(message.author.id)]
+    active_char_slot = user_data["active_char"]
+    active_char = user_data[active_char_slot]
+
+    gold = int(active_char["gold"])
+    gacha_rolls = int(active_char["gacha_rolls"])
+
+    # ERROR CASE: Not enough money to roll
+    if gold < VR_ROLL_COST:
+      await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
+      return
+
+    # Subtract money from balance
+    # Update gacha_rolls variable
+
+    active_char["gold"] = str(gold - VR_ROLL_COST)
+    active_char["gacha_rolls"] = str( gacha_rolls + 1)
+
+    # Get Random Number 
+    await ctx.send( f"Rolling for { total_items } potential items...")
+    roll = randint( 1, total_items)
+    await ctx.send( f"Pulled { roll }! Grabbing item from the archives...")
+
+    # Find item 
+    item = VERYRARE_ITEMS['veryrare'][str(roll)]
+
+    # Get item data
+    item_name = item["name"]
+    item_attn = item["attn"]
+    item_desc = item["desc"]
+
+    # Prep Item Embed for sending to user
+    embed = discord.Embed(
+      title = item_name,
+      color = discord.Color.purple()
+    )
+    embed.add_field( name = "Requires Attunement?",
+                     value = item_attn,
+                     inline = False )
+    embed.add_field( name = "Description",
+                     value = item_desc,
+                     inline = False )
+
+    # Display Item to user
+    await ctx.send( embed = embed )
+
+    await self.updateCharData( ctx )
+
+    # End of rollVeryRare() function
+    return 
+
 
   # rollLegendary function
-  # TODO: implement legendary item rolls (debug)
+  # TODO: implement legendary item rolls
   
   # GachaAdmin Command Group
   @commands.group( name = "gachadebug", pass_context = True , aliases = ["gd"])
@@ -1140,7 +1213,43 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     return 
 
   # rollVeryRare_admin
-  # TODO: implement very rare item rolls (debug)
+  @gachadebug.command( name = "vra", pass_context = True )
+  @commands.is_owner()
+  async def rollVeryRareAdmin( self, ctx, arg = None ):
+
+    total_items = len(VERYRARE_ITEMS['rare'])
+
+    # Get Random Number 
+    await ctx.send( f"Rolling for { total_items } potential items...")
+    roll = randint( 1, total_items)
+    await ctx.send( f"Pulled { roll }! Grabbing item from the archives...")
+
+    # Find item 
+    item = VERYRARE_ITEMS['veryrare'][str(roll)]
+
+    # Get item data
+    item_name = item["name"]
+    item_attn = item["attn"]
+    item_desc = item["desc"]
+
+    # Prep Item Embed for sending to user
+    embed = discord.Embed(
+      title = item_name,
+      color = discord.Color.purple()
+    )
+    embed.add_field( name = "Requires Attunement?",
+                     value = item_attn,
+                     inline = False )
+    embed.add_field( name = "Description",
+                     value = item_desc,
+                     inline = False )
+
+    # Display Item to user
+    await ctx.send( embed = embed )
+
+    # End of rollUncommon() function
+    return 
+
   
   # rollLegendary_admin 
   # TODO: implement legendary item rolls (debug)
