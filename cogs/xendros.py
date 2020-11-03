@@ -1217,7 +1217,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
   @commands.is_owner()
   async def rollVeryRareAdmin( self, ctx, arg = None ):
 
-    total_items = len(VERYRARE_ITEMS['rare'])
+    total_items = len(VERYRARE_ITEMS['veryrare'])
 
     # Get Random Number 
     await ctx.send( f"Rolling for { total_items } potential items...")
