@@ -1,4 +1,3 @@
-import discord # pylint: disable=import-error
 import enum
 
 from discord.ext import commands #pylint: disable=import-error
@@ -45,13 +44,13 @@ class XendrosErrorHandlingCog( commands.Cog, name = "XendrosErrorHandling"):
 
         self.error_messages = {}
 
-        await self.loadErrorMessages()
+        self.loadErrorMessages()
 
         print( "Error Handling Cog Initialization Complete!" )
 
         return 
 
-    async def loadErrorMessages( self ):
+    def loadErrorMessages( self ):
 
         self.error_messages = {
             ERROR_CODES.NO_ERROR: "No Error",

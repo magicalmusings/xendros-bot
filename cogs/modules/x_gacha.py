@@ -1,21 +1,13 @@
-import csv
-import enum
 import json
-import math
-import os
-from copy import copy
-from datetime import datetime
 from random import randint
 
 # NOTE: pylint error disables are used solely for local development, when ran in Repl.it, Kallista will have these modules available. 
 
 import discord # pylint: disable=import-error
-import disputils # pylint: disable=import-error
 from discord.ext import commands # pylint: disable=import-error
-from jsonmerge import merge # pylint: disable=import-error
 
-import x_error
-from x_error import ERROR_CODES
+from cogs.modules.x_error import ERROR_CODES
+import cogs.xendros
 
 READ_TAG = "r"
 
@@ -24,7 +16,7 @@ READ_TAG = "r"
 # TODO: Implement legendary item rolls
 # TODO: Implement legendary item rolls (debug)
 
-class XendrosGachaCog( commands.cog, name = "XendrosGacha" ):
+class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
 
     def __init__( self, bot ):
 
@@ -46,11 +38,21 @@ class XendrosGachaCog( commands.cog, name = "XendrosGacha" ):
 
         # Import Magic Item Data
 
-        await self.loadGachaItemLists()
+        self.loadGachaItemLists()
 
         print( "Initialization of Gacharoll Cog Complete!")
 
-    async def loadGachaItemLists( self ):
+    async def getCharData( self, ctx ):
+
+      XendrosCog.getCharData( ctx )
+      return
+    
+    async def updateCharData( self, ctx ):
+
+      XendrosCog.updateCharData( ctx )
+      return
+
+    def loadGachaItemLists( self ):
 
         # Uncommon Items 
 

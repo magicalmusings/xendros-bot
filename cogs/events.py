@@ -1,9 +1,6 @@
 
 import discord
 from discord.ext import commands
-import json
-from jsonmerge import merge
-import sqlite3
 
 EMPTY_JSON = '{}'
 READ_TAG = 'r'

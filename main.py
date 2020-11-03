@@ -40,6 +40,12 @@ if __name__ == '__main__':
 
     if file.endswith( ".py" ) and not file.startswith( "_" ):
       bot.load_extension( f"cogs.{file[:-3]}" )
+
+  for file in os.listdir( "cogs/modules"):
+
+    if file.endswith( ".py" ) and not file.startswith( "_" ):
+      bot.load_extension( f"cogs.modules.{file[:-3]}" )
+
       
   # Run the Bot
   bot.run( bot.config_token )

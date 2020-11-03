@@ -1,7 +1,7 @@
 {
     "197158011469299713": {
         "user_name": "Anders",
-        "active_char": "1",
+        "active_char": "2",
         "1": {
             "char_name": "Alzarif",
             "drive_link": "https://papajohns.com/",
@@ -11,11 +11,23 @@
             "lore_tokens": "0",
             "platinum": "0",
             "electrum": "0",
-            "gold": "0",
+            "gold": "22",
             "silver": "0",
             "copper": "0"
         },
-        "2": {},
+        "2": {
+            "char_name": "coochie",
+            "drive_link": "https://papajohns.com",
+            "gacha_rolls": "0",
+            "action_points": "5",
+            "downtime": "0",
+            "lore_tokens": "0",
+            "platinum": "0",
+            "electrum": "0",
+            "gold": "10",
+            "silver": "0",
+            "copper": "0"
+        },
         "3": {},
         "4": {},
         "5": {}

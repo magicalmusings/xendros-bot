@@ -1,54 +1,50 @@
-import csv
-import enum
+
 import json
-import math
-import os
-from copy import copy
-from datetime import datetime
-from random import randint
 
 # NOTE: pylint error disables are used solely for local development, when ran in Repl.it, Kallista will have these modules available. 
 
 import discord # pylint: disable=import-error
-import disputils # pylint: disable=import-error
 from discord.ext import commands # pylint: disable=import-error
-from jsonmerge import merge # pylint: disable=import-error
 
-import x_error
-from x_error import ERROR_CODES
+from cogs.modules.x_error import ERROR_CODES
 
 APPEND_TAG = "a"
-CHAR_DATA_PATH = "data/char_data.json"
 READ_TAG = "r"
 WRITE_TAG = "w"
+
+async def getCharData():
+
+  char_data = {}
+  char_data_path = "data/char_data.json"
+
+  with open( char_data_path, READ_TAG ) as read_file:
+
+    char_data = json.load( read_file )
+
+  return char_data
+
+async def updateCharData( char_data ):
+
+  char_data_path = "data/char_data.json"
+
+  with open( char_data_path, WRITE_TAG ) as write_file:
+
+      json.dump( char_data, write_file, indent = 4)
+
+  return
+
 
 class XendrosCog( commands.Cog, name = "Xendros" ):
 
   def __init__( self, bot ):
 
     self.bot = bot
-    self.CHAR_DATA = {}
 
-    # Import User Data
+    return
 
-    with open( CHAR_DATA_PATH, READ_TAG ) as read_file:
-      self.CHAR_DATA = json.load( read_file )
-
-    # End __init__() function
+    # End __init__() function  
 
   ## Main Functions 
-
-  async def getCharData( self, ctx ):
-
-    with open( CHAR_DATA_PATH , READ_TAG ) as read_file:
-
-      self.CHAR_DATA = json.load( read_file )
-
-  async def updateCharData( self, ctx ):
-
-    with open( CHAR_DATA_PATH, WRITE_TAG ) as write_file:
-
-      json.dump( self.CHAR_DATA, write_file, indent = 4)
 
   # add() function
   # - adds a character to the database
@@ -68,14 +64,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     
     # Grab current information from char_data
 
-    await self.getCharData( ctx )
+    char_data = await getCharData()
 
     # ALT CASE: If this is the users first time using Kallista
-    if str(message.author.id) not in self.CHAR_DATA:
+    if str(message.author.id) not in char_data:
 
       await ctx.send( "Seems like it's your first time here, love. Allow me to add you to my registry..." )
 
-      self.CHAR_DATA[str(message.author.id)] = {}
+      char_data[str(message.author.id)] = {}
       user_data = self.CHAR_DATA[str(message.author.id)]
       user_data["user_name"] = f"{message.author.name}"
       user_data["active_char"] = "1"
@@ -85,7 +81,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       user_data["4"] = {}
       user_data["5"] = {}
 
-    user_data = self.CHAR_DATA[str(message.author.id)]
+    user_data = char_data[str(message.author.id)]
     print( user_data )
 
     # Get the ids of the characters
@@ -107,31 +103,31 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     if len(char_one) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[str(message.author.id)]["active_char"] = "1"
+      char_data[str(message.author.id)]["active_char"] = "1"
 
     if len(char_two) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[str(message.author.id)]["active_char"] = "2"
+      char_data[str(message.author.id)]["active_char"] = "2"
 
     if len(char_three) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[str(message.author.id)]["active_char"] = "3"
+      char_data[str(message.author.id)]["active_char"] = "3"
 
     if len(char_four) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[str(message.author.id)]["active_char"] = "4"
+      char_data[str(message.author.id)]["active_char"] = "4"
 
     if len(char_five) == 0 and char_add_flag is False:
       char_add_flag = True
-      self.CHAR_DATA[str(message.author.id)]["active_char"] = "5"
+      char_data[str(message.author.id)]["active_char"] = "5"
 
     # Initialize row for user in char_data table
-    active_char_slot = self.CHAR_DATA[str(message.author.id)]["active_char"]
+    active_char_slot = char_data[str(message.author.id)]["active_char"]
 
     char_name = args[0]
     drive_link = args[1]
 
-    active_char = self.CHAR_DATA[str(message.author.id)][active_char_slot]
+    active_char = char_data[str(message.author.id)][active_char_slot]
     active_char["char_name"] = f"{char_name}"
     active_char["drive_link"] = f"{drive_link}"
     active_char["gacha_rolls"] = "0"
@@ -144,7 +140,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     active_char["silver"] = "0"
     active_char["copper"] = "0"
 
-    await self.updateCharData( ctx )
+    await updateCharData( char_data )
 
     await ctx.send( f"You've been added to my list, {char_name}! I've given you 10 gold as a welcome gift. Hopefully ours will be an ongoing arrangement, love.")
 

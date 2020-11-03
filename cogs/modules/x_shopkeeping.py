@@ -3,8 +3,8 @@ import discord # pylint: disable=import-error
 from discord.ext import commands # pylint: disable=import-error
 import math
 
-import x_error
-from x_error import ERROR_CODES
+from cogs.modules.x_error import ERROR_CODES
+import cogs.xendros as xendros
 
 ## Shopkeeping Functions To Do List
   # TODO: Implement Shops of Different Kinds
@@ -15,7 +15,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
     def __init__( self, bot ):
 
-        self.bot = bot 
+        self.bot = bot
 
         self.CURRENCY_SWITCH = {
             'ap': "action_points",
@@ -66,7 +66,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
             }
         }
 
-        print( "Shopkeeping initializatio complete!")
+        print( "Shopkeeping initialization complete!")
 
         return
 
@@ -131,15 +131,15 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         message = ctx.message
 
-        await self.getCharData( ctx )
+        char_data = await xendros.getCharData()
 
         # ERROR CASE: If the player has not yet registered with the bot
-        if str(message.author.id) not in self.CHAR_DATA:
+        if str(message.author.id) not in char_data:
             await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
             return
 
         # Find Active Character
-        user_data = self.CHAR_DATA[str(message.author.id)]
+        user_data = char_data[str(message.author.id)]
 
         await self.displayBalanceEmbed( ctx, user_data )
 
@@ -161,20 +161,21 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
         return
         # End of getKeyPath() function
 
-    async def getCharFromName( self, char_name ):
+    async def getUserIDFromName( self, char_name ):
 
+        char_data = {}
         char_data_keys = []
         path = []
 
-        await self.getKeyPath(char_data_keys, path, self.CHAR_DATA, char_name)
+        char_data = await xendros.getCharData()
+
+        await self.getKeyPath(char_data_keys, path, char_data, char_name)
 
         user_id = char_data_keys[0][0]
-        active_char_slot = char_data_keys[0][1]
-        char_data = self.CHAR_DATA[user_id][active_char_slot]
 
-        return char_data
+        return user_id
 
-        # End of getCharFromName() function
+        # End of getUserIDFromName() function
     
     # deposit function 
     @commands.command( name = "deposit", pass_context = True , aliases = ['dep'])
@@ -188,6 +189,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
             await self.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_ARGS_LENGTH_ERROR )
             return
 
+        char_data = {}
         currency = self.CURRENCY_SWITCH.get( args[1], "NULL")
 
         # print( currency )
@@ -198,27 +200,29 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
             await self.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_CURRENCY_ERROR )
             return
 
-        await self.getCharData( ctx )
-
         # ERROR CASE: If result is null 
         try:
             # print( args[0] )
-            char_data = await self.getCharFromName( args[0] )
-            # print( char_data )
+            char_data = await xendros.getCharData()
+            user_id = await self.getUserIDFromName( args[0] )
+            user_data = char_data[ user_id ]
+            active_char_slot = user_data["active_char"]
+            active_char = user_data[active_char_slot]
+            # print( active_char )
         except:
             await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
             return
         
-        current_amt = int( char_data.get(currency) )
+        current_amt = int( active_char.get(currency) )
 
-        char_data[currency] = str( current_amt + int( args[2] ) )
+        active_char[currency] = str( current_amt + int( args[2] ) )
 
-        char_name = str(char_data["char_name"])
-        new_amt = str(char_data[currency])
+        char_name = str(active_char["char_name"])
+        new_amt = str(active_char[currency])
 
         await ctx.send( f"Fantastic, I've deposited { args[2] } { args[1].upper() } into {char_name}'s account. Their new balance is {new_amt} { args[1].upper() } !")
 
-        await self.updateCharData( ctx )
+        await xendros.updateCharData( char_data )
 
         return 
 
@@ -242,30 +246,32 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
             await self.displayErrorMessage( ctx, ERROR_CODES.WITHDRAW_CURRENCY_ERROR )
             return
 
-        await self.getCharData( ctx )
-
         try:
             # print( args[0] )
-            char_data = await self.getCharFromName( args[0] )
+            char_data = await xendros.getCharData()
+            user_id = await self.getUserIDFromName( args[0] )
+            user_data = char_data[ user_id ]
+            active_char_slot = user_data["active_char"]
+            active_char = user_data[active_char_slot]
             # print( char_data )
         except:
             await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
             return 
 
-        current_amt = int( char_data.get( currency ) )
+        current_amt = int( active_char.get( currency ) )
 
         calc = current_amt - int( args[2] )
         if calc < 0:
             calc = 0
 
-        char_data[currency] = str( calc )
+        active_char[currency] = str( calc )
 
-        char_name = str( char_data["char_name"] )
-        new_amt = str( char_data[currency] )
+        char_name = str( active_char["char_name"] )
+        new_amt = str( active_char[currency] )
 
         await ctx.send( f"I've withdrawn { args[2] } { args[1].upper() } from {char_name}'s account. Their new balance is {new_amt} { args[1].upper() } !")
 
-        await self.updateCharData( ctx )
+        await xendros.updateCharData( char_data )
 
         # End of withdraw() function
         return
@@ -288,11 +294,13 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
             await self.displayErrorMessage( ctx, ERROR_CODES.SETBAL_CURRENCY_ERROR )
             return
 
-        await self.getCharData( ctx )
-
         try:
             # print( args[0] )
-            char_data = await self.getCharFromName( args[0] )
+            char_data = await xendros.getCharData()
+            user_id = await self.getUserIDFromName( args[0] )
+            user_data = char_data[ user_id ]
+            active_char_slot = user_data["active_char"]
+            active_char = user_data[active_char_slot]
             # print( char_data )
         except:
             await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
@@ -302,15 +310,15 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
         if new_amt < 0:
             new_amt = 0
 
-        current_amt = char_data[currency]
-        char_data[currency] = str(new_amt)
+        current_amt = active_char[currency]
+        active_char[currency] = str(new_amt)
 
-        char_name = char_data["char_name"]
-        new_amt = str( char_data[currency] )
+        char_name = active_char["char_name"]
+        new_amt = str( active_char[currency] )
 
         await ctx.send( f"Great, I've set {char_name}'s {currency.upper()} amount from {current_amt} {args[1].upper()} to { new_amt} { args[1].upper() } !")
 
-        await self.updateCharData( ctx )
+        await xendros.updateCharData( char_data )
 
         return 
 
@@ -332,14 +340,14 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
         message = ctx.message
 
         # Get user char data 
-        await self.getCharData( ctx )
+        char_data = await xendros.getCharData()
 
         # ERROR CASE: If user is not registered
-        if str( message.author.id) not in self.CHAR_DATA:
+        if str( message.author.id) not in char_data:
             await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
             return
 
-        user_data = self.CHAR_DATA[str(message.author.id)]
+        user_data = char_data[str(message.author.id)]
         active_char_slot = user_data["active_char"]
         active_char = user_data[active_char_slot]
 
@@ -428,7 +436,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
         # Display conversion success and balance to user
         await ctx.send( f"Success! I've converted your **{amt_to_convert}** {currency_one} into **{curr_to_add}** {currency_two}!! Your new balance is: ")
         
-        await self.updateCharData( ctx )
+        await xendros.updateCharData( char_data )
 
         await self.balance( ctx )
 
