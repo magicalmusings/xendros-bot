@@ -2,8 +2,8 @@ from __future__ import print_function
 
 import os
 
-from discord.ext import commands
-from flask import Flask 
+from discord.ext import commands # pylint: disable=import-error
+from flask import Flask # pylint: disable=import-error
 from threading import Thread
 
 # Initialize Flask app for use with bot
