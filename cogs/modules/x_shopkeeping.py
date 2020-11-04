@@ -3,8 +3,9 @@ import discord # pylint: disable=import-error
 from discord.ext import commands # pylint: disable=import-error
 import math
 
-from cogs.modules.x_error import ERROR_CODES
 import cogs.xendros as xendros
+import cogs.error_display as error_display
+from cogs.error_display import ERROR_CODES
 
 ## Shopkeeping Functions To Do List
   # TODO: Implement Shops of Different Kinds
@@ -116,7 +117,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
                             inline = True ) 
             embed.set_footer( text = f"User ID: {user_id}, Char Slot: {active_char_slot}")
         except:
-            await self.displayErrorMessage( ctx, ERROR_CODES.BALANCE_URL_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.BALANCE_URL_ERROR )
             return
 
         await ctx.send( embed = embed )    
@@ -135,7 +136,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: If the player has not yet registered with the bot
         if str(message.author.id) not in char_data:
-            await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
             return
 
         # Find Active Character
@@ -186,7 +187,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: If # of arguments is not correct
         if len( args ) < 3:
-            await self.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_ARGS_LENGTH_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_ARGS_LENGTH_ERROR )
             return
 
         char_data = {}
@@ -197,7 +198,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
         # ERROR CASE: If input currency is invalid
         if currency == "NULL":
 
-            await self.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_CURRENCY_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.DEPOSIT_CURRENCY_ERROR )
             return
 
         # ERROR CASE: If result is null 
@@ -210,7 +211,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
             active_char = user_data[active_char_slot]
             # print( active_char )
         except:
-            await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
             return
         
         current_amt = int( active_char.get(currency) )
@@ -237,13 +238,13 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: If # of arguments is not correct
         if len( args ) < 3:
-            await self.displayErrorMessage( ctx, ERROR_CODES.WITHDRAW_ARGS_LENGTH_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.WITHDRAW_ARGS_LENGTH_ERROR )
             return
 
         currency = self.CURRENCY_SWITCH.get( args[1], "NULL")
 
         if currency == "NULL":
-            await self.displayErrorMessage( ctx, ERROR_CODES.WITHDRAW_CURRENCY_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.WITHDRAW_CURRENCY_ERROR )
             return
 
         try:
@@ -255,7 +256,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
             active_char = user_data[active_char_slot]
             # print( char_data )
         except:
-            await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
             return 
 
         current_amt = int( active_char.get( currency ) )
@@ -285,13 +286,13 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: If # of arguments is not correct
         if len( args ) < 3:
-            await self.displayErrorMessage( ctx, ERROR_CODES.SETBAL_ARGS_LENGTH_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.SETBAL_ARGS_LENGTH_ERROR )
             return
 
         currency = self.CURRENCY_SWITCH.get( args[1], "NULL")
 
         if currency == "NULL":
-            await self.displayErrorMessage( ctx, ERROR_CODES.SETBAL_CURRENCY_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.SETBAL_CURRENCY_ERROR )
             return
 
         try:
@@ -303,7 +304,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
             active_char = user_data[active_char_slot]
             # print( char_data )
         except:
-            await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CHAR_ID_NOT_FOUND_ERROR )
             return 
 
         new_amt = int(args[2])
@@ -334,7 +335,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: if # of args is incorrect
         if len( args ) < 3:
-            await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_ARGS_LENGTH_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CURREX_ARGS_LENGTH_ERROR )
             return 
 
         message = ctx.message
@@ -344,7 +345,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: If user is not registered
         if str( message.author.id) not in char_data:
-            await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
             return
 
         user_data = char_data[str(message.author.id)]
@@ -357,25 +358,25 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: If input currency is invalid
         if currency_one == "NULL" or currency_two == "NULL":
-            await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CURRENCY_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CURRENCY_ERROR )
             return
 
         # ERROR CASE: If downtime is attempted for conversion
         elif currency_one == "downtime" or currency_two == "downtime":
-            await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_DOWNTIME_INPUT_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CURREX_DOWNTIME_INPUT_ERROR )
             return
 
         elif currency_one == "action_points" or currency_one == "lore_tokens" or currency_two == "action_points" or currency_two == "lore_tokens":
-            await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_AP_LT_CONVERSION_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CURREX_AP_LT_CONVERSION_ERROR )
             return
 
         # ERROR CASE: If ap / lt and pp/ep/gp/sp/cp are being converted between.
         elif (currency_one == "action_points" or currency_one == "lore_tokens") and (currency_two == "platinum" or currency_two == "gold" or currency_two == "silver" or currency_two == "copper" or currency_two == "electrum"):
-            await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR )
             return
 
         elif (currency_two == "action_points" or currency_two == "lore_tokens") and (currency_one == "platinum" or currency_one == "gold" or currency_one == "silver" or currency_one == "copper" or currency_one == "electrum"):
-            await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CURREX_INVALID_CONVERSION_ERROR )
             return
 
         # Check current balance
@@ -385,7 +386,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: if we don't have enough currency in order to make it work
         if curr_one_amt == 0:
-            await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_NOT_ENOUGH_CURRENCY_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CURREX_NOT_ENOUGH_CURRENCY_ERROR )
             return 
 
         # If we don't have enough currency, but still have currency:
@@ -401,7 +402,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: Converting between the same currency
         if conversion_rate == 1 or backwards_conversion_rate == 1:
-            await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_NO_CONVERSION_NEEDED_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CURREX_NO_CONVERSION_NEEDED_ERROR )
             return
         
         # Examples of conversion are included below. For the purposes of examples, lets say the user currently has: 
@@ -414,7 +415,7 @@ class XendrosShopkeepingCog( commands.Cog, name = "XendrosShopkeeping" ):
 
         # ERROR CASE: 
         if curr_to_add <= 0:
-            await self.displayErrorMessage( ctx, ERROR_CODES.CURREX_NOT_ENOUGH_CURRENCY_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.CURREX_NOT_ENOUGH_CURRENCY_ERROR )
             return
 
         # Add amt of currency to new currency_two total 

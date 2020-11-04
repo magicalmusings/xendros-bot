@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
 
-from cogs.modules.x_error import ERROR_CODES
-from cogs import xendros as xendros
-from cogs.xendros import XendrosCog
+import cogs.xendros as xendros
+import cogs.error_display as error_display
+from cogs.error_display import ERROR_CODES
 
 ## Dice Rolling Functions 
 # TODO: implement skill check rolls

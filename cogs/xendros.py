@@ -6,7 +6,8 @@ import json
 import discord # pylint: disable=import-error
 from discord.ext import commands # pylint: disable=import-error
 
-from cogs.modules.x_error import ERROR_CODES
+import cogs.error_display as error_display
+from cogs.error_display import ERROR_CODES
 
 APPEND_TAG = "a"
 READ_TAG = "r"
@@ -40,6 +41,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     self.bot = bot
 
+    print( "Main Bot initialization complete!" )
+
     return
 
     # End __init__() function  
@@ -56,7 +59,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     # ERROR CASE(S): If command is given improperly 
     if args is None or len( args ) < 2:
       
-      await self.displayErrorMessage( ctx, ERROR_CODES.ADD_ARGS_LENGTH_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.ADD_ARGS_LENGTH_ERROR )
       return
 
     char_add_flag = False
@@ -72,7 +75,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
       await ctx.send( "Seems like it's your first time here, love. Allow me to add you to my registry..." )
 
       char_data[str(message.author.id)] = {}
-      user_data = self.CHAR_DATA[str(message.author.id)]
+      user_data = char_data[str(message.author.id)]
       user_data["user_name"] = f"{message.author.name}"
       user_data["active_char"] = "1"
       user_data["1"] = {}
@@ -93,7 +96,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     # ERROR CASE: If three characters are already made 
     if len(char_one) != 0 and len(char_two) != 0 and len(char_three) != 0 and len(char_four) != 0 and len(char_five) != 0:
-      await self.displayErrorMessage( ctx, ERROR_CODES.TOO_MANY_CHARS_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.TOO_MANY_CHARS_ERROR )
       return
 
     char_name = args[0]
@@ -144,6 +147,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     await ctx.send( f"You've been added to my list, {char_name}! I've given you 10 gold as a welcome gift. Hopefully ours will be an ongoing arrangement, love.")
 
+    return
     # End add() function 
 
   # delete function
@@ -155,33 +159,36 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     message = ctx.message 
 
-    await self.getCharData( ctx )
-
     # ERROR CASE: if result is non-existent (no characters registered)
     if arg is None:
-      await self.displayErrorMessage( ctx, ERROR_CODES.DELETE_ARGS_LENGTH_ERROR )
-      return
-    elif str( message.author.id ) not in self.CHAR_DATA:
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.DELETE_ARGS_LENGTH_ERROR )
       return
     elif int(arg) > 5:
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.DELETE_ARGS_LENGTH_ERROR )
       return
 
+    char_data = await getCharData()
+
+    if str( message.author.id ) not in char_data:
+      await error_display.displayErrorMessage( ctx , ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+
     # Get Character ID
-    user_data = self.CHAR_DATA[ str( message.author.id ) ]
-    char_data = user_data[str(arg)]
+    user_data = char_data[ str( message.author.id ) ]
     char_slot = str(arg)
+    char_to_delete = user_data[char_slot]
+    
 
     # ERROR CASE: If the specified slot is already empty
-    if len( char_data ) == 0:
-      await self.displayErrorMessage( ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
+    if len( char_to_delete ) == 0:
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.CHAR_SLOT_EMPTY_ERROR )
       return
 
     # Update Character Slot
-    self.CHAR_DATA[ str( message.author.id ) ][char_slot] = {}
+    char_to_delete = {}
 
     await ctx.send( f"The character in Slot { char_slot } has been deleted." )
 
-    await self.updateCharData( ctx )
+    await updateCharData( char_data )
 
     # Check if no more characters exist for this character
     if len( user_data["1"] ) == 0 and len( user_data["2"] ) == 0 and len( user_data["3"] ) == 0 and len( user_data["4"] ) == 0 and len( user_data["5"] ) == 0:
@@ -205,16 +212,16 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     message = ctx.message 
 
-    await self.getCharData( ctx )
+    char_data = await getCharData()
 
-    if str( message.author.id ) not in self.CHAR_DATA:
+    if str( message.author.id ) not in char_data:
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.ERASE_NO_CHAR_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.ERASE_NO_CHAR_ERROR )
       return
 
-    del self.CHAR_DATA[str( message.author.id )]
+    del char_data[str( message.author.id )]
 
-    await self.updateCharData( ctx )
+    await updateCharData( char_data )
 
     await ctx.send( "You have successfully deleted the specified account from my registry. Perhaps we may see them again?")
 
@@ -233,60 +240,60 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     await self.bot.wait_until_ready()
 
     if arg is None: 
-      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
       return
     elif int(arg) > 5:
-      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ARGS_LENGTH_ERROR )
       return
 
     message = ctx.message
 
-    await self.getCharData( ctx )
+    char_data = await getCharData()
 
     # ERROR CASE: If there is no data for the user
-    if str( message.author.id ) not in self.CHAR_DATA:
-      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+    if str( message.author.id ) not in char_data:
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       return
 
-    user_data = self.CHAR_DATA[str(message.author.id)]
+    user_data = char_data[str(message.author.id)]
     active_char_slot = user_data["active_char"]
     active_char = user_data[active_char_slot]
 
     # ERROR CASE: If the active character is already set 
     if active_char_slot == str(arg):
-      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ACTIVE_SET_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ACTIVE_SET_ERROR )
       return
 
     # ERROR CASE: If only one character is registered
     if len( user_data["2"] ) == 0 and len( user_data["3"]) == 0 and len( user_data["4"]) == 0 and len( user_data["5"]) == 0:
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ONE_CHAR_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_ONE_CHAR_ERROR )
       return
 
     # ERROR CASE: If slot chosen is not filled 
     if len(user_data["1"]) == 0 and arg == 1:
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_ONE_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_ONE_ERROR )
       return
 
     elif len(user_data["2"]) == 0 and arg == 2:
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_TWO_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_TWO_ERROR )
       return
 
     elif len(user_data["3"]) == 0 and arg == 3:
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
       return
 
     elif len(user_data["4"]) == 0 and arg == 4:
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
       return
 
     elif len(user_data["5"]) == 0 and arg == 5:
 
-      await self.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.SWITCHCHAR_CHAR_SLOT_THREE_ERROR )
       return
 
     # Display successful switch of character to user 
@@ -295,6 +302,8 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     active_char = user_data[str(arg)]
 
     char_name = active_char["char_name"]
+
+    await updateCharData( char_data )
 
     await ctx.send( f"Success! I've changed your active character to {char_name}.")
 
@@ -311,14 +320,14 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     message = ctx.message
 
-    await self.getCharData( ctx )
+    char_data = await getCharData()
 
     # ERROR CASE: If Result is None
-    if str(message.author.id) not in self.CHAR_DATA: 
-      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+    if str(message.author.id) not in char_data: 
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       return
 
-    user_data = self.CHAR_DATA[str(message.author.id)]
+    user_data = char_data[str(message.author.id)]
     active_char_slot = user_data["active_char"]
     active_char = user_data[active_char_slot]
 
@@ -337,19 +346,28 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
     
     message = ctx.message
 
-    await self.getCharData( ctx )
+    char_data = await getCharData()
 
     # ERROR CASE: If result is none
-    if str(message.author.id) not in self.CHAR_DATA: 
-      await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+    if str(message.author.id) not in char_data: 
+      await error_display.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
       return 
+
+    user_data = char_data[str(message.author.id)]
+
+    await self.displayCharlistEmbed( ctx, user_data )
+
+    # End of charlist() function 
+    return
+
+  async def displayCharlistEmbed( self, ctx, user_data ):
+
+    message = ctx.message
 
     embed = discord.Embed(
       title = f"Characters for { message.author }",
       color = discord.Color.dark_blue()
     )
-
-    user_data = self.CHAR_DATA[str(message.author.id)]
 
     if len( user_data["1"] ) != 0:
       char_name = user_data["1"]["char_name"]
@@ -399,8 +417,7 @@ class XendrosCog( commands.Cog, name = "Xendros" ):
 
     await ctx.send( embed = embed )
 
-    # End of charlist() function 
-    return 
+    return
 
 # End Xendros Cog
 

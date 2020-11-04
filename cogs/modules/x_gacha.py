@@ -6,8 +6,9 @@ from random import randint
 import discord # pylint: disable=import-error
 from discord.ext import commands # pylint: disable=import-error
 
-from cogs.modules.x_error import ERROR_CODES
-import cogs.xendros
+import cogs.xendros as xendros
+import cogs.error_display as error_display
+from cogs.error_display import ERROR_CODES
 
 READ_TAG = "r"
 
@@ -42,40 +43,36 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
 
         print( "Initialization of Gacharoll Cog Complete!")
 
-    async def getCharData( self, ctx ):
-
-      XendrosCog.getCharData( ctx )
-      return
-    
-    async def updateCharData( self, ctx ):
-
-      XendrosCog.updateCharData( ctx )
-      return
-
     def loadGachaItemLists( self ):
 
         # Uncommon Items 
 
-        with open( self.UNCOMMON_ITEMS_PATH, READ_TAG ) as read_file:
-            self.UNCOMMON_ITEMS = json.load( read_file )
+        try:
 
-        print( f"Loaded {len(self.UNCOMMON_ITEMS['uncommon'])} uncommon magic items!" )
+          with open( self.UNCOMMON_ITEMS_PATH, READ_TAG ) as read_file:
+              self.UNCOMMON_ITEMS = json.load( read_file )
 
-        # Rare Items
+          print( f"Loaded {len(self.UNCOMMON_ITEMS['uncommon'])} uncommon magic items!" )
 
-        with open( self.RARE_ITEMS_PATH, READ_TAG ) as read_file:
-            self.RARE_ITEMS = json.load( read_file )
+          # Rare Items
 
-        print( f"Loaded {len(self.RARE_ITEMS['rare'])} rare magic items!" )
+          with open( self.RARE_ITEMS_PATH, READ_TAG ) as read_file:
+              self.RARE_ITEMS = json.load( read_file )
 
-        # Very Rare Items 
+          print( f"Loaded {len(self.RARE_ITEMS['rare'])} rare magic items!" )
 
-        with open( self.VERYRARE_ITEMS_PATH, READ_TAG ) as read_file:
-            self.VERYRARE_ITEMS = json.load( read_file )
+          # Very Rare Items 
 
-        print( f"Loaded {len(self.VERYRARE_ITEMS['veryrare'])} very rare magic items!" )
+          with open( self.VERYRARE_ITEMS_PATH, READ_TAG ) as read_file:
+              self.VERYRARE_ITEMS = json.load( read_file )
 
-        return
+          print( f"Loaded {len(self.VERYRARE_ITEMS['veryrare'])} very rare magic items!" )
+
+        except: 
+          print( "ERROR LOADING JSON FILES")
+          return False
+
+        return True 
         # End of loadGachaItemLists() function
 
     async def displayGachaItemEmbed( self, ctx , item ):
@@ -110,7 +107,7 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
 
         if ctx.invoked_subcommand is None:
 
-            await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_SUBCOMMAND_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_SUBCOMMAND_ERROR )
             return 
 
     # rollUncommon function
@@ -123,16 +120,16 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
         total_items = len(self.UNCOMMON_ITEMS['uncommon'])
 
         # Get Character Data 
-        await self.getCharData(ctx)
+        char_data = await xendros.getCharData()
 
         # Check if user is registered 
 
         # ERROR CASE: If result is none (i.e. user is not registered)
-        if str( message.author.id ) not in self.CHAR_DATA:
-            await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+        if str( message.author.id ) not in char_data:
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
             return 
 
-        user_data = self.CHAR_DATA[str(message.author.id)]
+        user_data = char_data[str(message.author.id)]
         active_char_slot = user_data["active_char"]
         active_char = user_data[active_char_slot]
 
@@ -141,7 +138,7 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
 
         # ERROR CASE: Not enough money to roll
         if gold < self.UC_ROLL_COST:
-            await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
             return
 
         # Subtract money from balance
@@ -160,7 +157,7 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
 
         await self.displayGachaItemEmbed( ctx, item )
 
-        await self.updateCharData(ctx)
+        await xendros.updateCharData( char_data )
 
         # End of rollUncommon() function
         return 
@@ -175,16 +172,16 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
         total_items = len(self.RARE_ITEMS['rare'])
 
         # Get Character Data 
-        await self.getCharData( ctx )
+        char_data = await xendros.getCharData()
 
         # Check if user is registered 
 
         # ERROR CASE: If result is none (i.e. user is not registered)
-        if str( message.author.id) not in self.CHAR_DATA:
-            await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+        if str( message.author.id) not in char_data:
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
             return 
 
-        user_data = self.CHAR_DATA[str(message.author.id)]
+        user_data = char_data[str(message.author.id)]
         active_char_slot = user_data["active_char"]
         active_char = user_data[active_char_slot]
 
@@ -193,7 +190,7 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
 
         # ERROR CASE: Not enough money to roll
         if gold < self.R_ROLL_COST:
-            await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
             return
 
         # Subtract money from balance
@@ -212,7 +209,7 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
 
         await self.displayGachaItemEmbed( ctx, item )
 
-        await self.updateCharData( ctx )
+        await xendros.updateCharData( char_data )
 
         # End of rollRare() function
         return 
@@ -227,16 +224,16 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
         total_items = len(self.VERYRARE_ITEMS['veryrare'])
 
         # Get Character Data 
-        await self.getCharData( ctx )
+        char_data = await xendros.getCharData()
 
         # Check if user is registered 
 
         # ERROR CASE: If result is none (i.e. user is not registered)
         if str( message.author.id ) not in self.CHAR_DATA:
-            await self.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.USER_ID_NOT_FOUND_ERROR )
             return 
 
-        user_data = self.CHAR_DATA[str(message.author.id)]
+        user_data = char_data[str(message.author.id)]
         active_char_slot = user_data["active_char"]
         active_char = user_data[active_char_slot]
 
@@ -245,7 +242,7 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
 
         # ERROR CASE: Not enough money to roll
         if gold < self.VR_ROLL_COST:
-            await self.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.GACHAROLL_NOT_ENOUGH_MONEY_ERROR )
             return
 
         # Subtract money from balance
@@ -264,7 +261,7 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
 
         await self.displayGachaItemEmbed( ctx, item )
 
-        await self.updateCharData( ctx )
+        await xendros.updateCharData( char_data )
 
         # End of rollVeryRare() function
         return 
@@ -275,7 +272,7 @@ class XendrosGachaCog( commands.Cog, name = "XendrosGacha" ):
     async def gachadebug( self, ctx ):
 
         if ctx.invoked_subcommand is None:
-            await self.displayErrorMessage( ctx, ERROR_CODES.GACHAADMIN_SUBCOMMAND_ERROR)
+            await error_display.displayErrorMessage( ctx, ERROR_CODES.GACHAADMIN_SUBCOMMAND_ERROR)
             return
 
     # rollUncommon_admin function

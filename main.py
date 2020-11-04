@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
   for file in os.listdir( "cogs" ):
 
-    if file.endswith( ".py" ) and not file.startswith( "_" ):
+    if file.endswith( ".py" ) and not file.startswith( "_" ) and not file.startswith("error"):
       bot.load_extension( f"cogs.{file[:-3]}" )
 
   for file in os.listdir( "cogs/modules"):
